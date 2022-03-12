@@ -1,17 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
+import {IUserContext} from '../Model/models'
 
 //interface for the default state
-interface UserInterface{
-    user:{
-        username: string,
-        token: string,
-        id: string,
-    }
+interface StateInterface{
+    user:IUserContext
     isLoggedIn: boolean
 }
 
 // Default state fot the user context
-const defaultState: UserInterface= {
+const defaultState: StateInterface= {
     user:{
         username: "",
         token: "",
@@ -20,9 +17,18 @@ const defaultState: UserInterface= {
     isLoggedIn: false
 }
 
+
 const TaskContext: React.FC = () => {
+  // Specify the type of the useState
+  const [count, setCount] = useState<StateInterface>(defaultState) 
+
+  const start = () =>{
+    setCount({user: {username: "Name1", token: "2312312", id: "123123"}, isLoggedIn: true})
+    console.log(count);
+    
+  }
   return (
-    <div>TaskContext</div>
+    <button onClick={start}>Change context state</button>
   )
 }
 export default TaskContext;
