@@ -1,0 +1,11 @@
+.border_style{
+    border-width:2px !important;
+    border-radius: 20px;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    background-color: rgba(94, 109, 119, 0.21);
+}
+.title{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
