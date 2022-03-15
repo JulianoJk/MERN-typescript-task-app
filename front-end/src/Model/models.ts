@@ -41,3 +41,16 @@ export interface IAuthCredentials{
     password?: string | undefined;
     passwordRepeat?: string | undefined;
 }
+
+export interface IProps{
+  tasks: any
+  deleteTasks: any
+  updateTasks: any
+}
+
+export interface ITodo{
+  name: string | undefined;
+  _id: string | undefined;
+  todo: string[] 
+  completed: boolean
+}
