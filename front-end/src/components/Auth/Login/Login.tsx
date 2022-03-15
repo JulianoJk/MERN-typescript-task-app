@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { loginAPI } from '../../../API/Api';
-import { useTaskDispatch } from '../../../context/TaskContext';
+import { useState } from 'react';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
+import {  useTaskDispatch } from '../../../context/TaskContext';
+import { dispatchContext, IUserContext } from '../../../Model/models';
+import { Button } from '../../button/Button.component';
+import Logo from '../../../images/logo.png';
 import '../Auth.css';
-const Login:React.FC = ()=> {
-  const navigate = useNavigate();
-  
 
+const Login:React.FC = ()=> {
+  const navigate: NavigateFunction = useNavigate();
+  
 	const [email, setEmail] = useState<string>("");
 	const [password, setPassword] = useState<string>("");
-	const taskDispatch = useTaskDispatch();
-	// TODO!: Remove any
-	const [user, setUser] = useState<any>(undefined)
-
+	const taskDispatch: dispatchContext = useTaskDispatch();
 
   // Email handler	
   const onEmailChange = (e: React.BaseSyntheticEvent):void => {
@@ -26,10 +25,22 @@ const Login:React.FC = ()=> {
 	const handleInputs = async (e: React.BaseSyntheticEvent) =>{
 		e.preventDefault();
 
-		// Pass the values to the API call
-		const data = await loginAPI(email, password);
-		if(data){
-			setUser(data)
+		const response = await fetch('http://localhost:3001/users/login', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+				email: email,
+				password: password,
+			}),
+		});
+  		const data: IUserContext = await response.json();
+		// If response is true(200) continue
+		if(response.ok){
+			const user: IUserContext = {
+				id: data['id'],
+				username: data['username'],
+				token: data['token'],
+			};
 			taskDispatch({ type: 'SET_USER', user: user });
 			taskDispatch({ type: 'SET_IS_LOGGED_IN', isLoggedIn: true });
 			navigate('/home');
@@ -39,9 +50,11 @@ const Login:React.FC = ()=> {
 	}
 
   return (
-    <div>
-      <h1>Login</h1>
-      <form onSubmit={handleInputs}>
+	<div className="container flex-column input-container w-50 p-3 border border_style">
+		<div>
+			<img src={Logo} alt="Logo-image" className="rounded mx-auto d-block " />
+		</div>
+    	<form onSubmit={handleInputs}>
 			<label htmlFor="email" className="control-label text">
 				<strong>Email:</strong>
 			</label>
@@ -69,9 +82,9 @@ const Login:React.FC = ()=> {
 				autoComplete="on"
 			/>
 			<br />
-			<div className="d-grid gap-2">
-				<button>Submit</button>
-			</div>
+				<div className="d-grid gap-2">
+					<Button text={'Submit'} />
+				</div>
 		</form>
     </div>
   )

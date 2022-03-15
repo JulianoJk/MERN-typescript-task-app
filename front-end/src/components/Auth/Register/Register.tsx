@@ -1,37 +1,21 @@
-import React, { useReducer, useState } from 'react';
+import { useReducer } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerAPI } from '../../../API/Api';
-import { IAuthCredentials } from '../../../Model/models';
+import { dispatchContext, EActionTypes,IAuthCredentials, IUserContext } from '../../../Model/models';
 import { useTaskDispatch } from '../../../context/TaskContext';
+import { Button } from '../../button/Button.component';
+import Logo from '../../../images/logo.png';
 import '../Auth.css';
   
-
-  const initState: IAuthCredentials = {
+// Initial state for the user credentials
+const initState: IAuthCredentials = {
 	email: undefined,
 	username: undefined,
 	password: undefined,
 	passwordRepeat: undefined
 };
 
-// An enum with all the types of actions to use in our reducer
-enum EActionTypes{
-	SET_EMAIL = "SET_EMAIL",
-	SET_NAME="SET_NAME",
-	SET_PASSWORD="SET_PASSWORD",
-	SET_CONFIRM_PASSWORD="SET_CONFIRM_PASSWORD"
-}
-
-// An interface for our actions
-// interface IReducerAction {
-// 	type?: EActionTypes;
-// 	email?: string;
-// 	username?: string
-// 	password?: string
-// 	passwordRepeat?: string
-//   }
-
-// TODO!: Remove any from action: any
-const reducer = (state: IAuthCredentials, action: any) => {
+// Reducer to set credentials for the user
+const reducer = (state: IAuthCredentials, action: IAuthCredentials) => {
 	switch (action.type) {
 		case EActionTypes.SET_EMAIL:
 			return { ...state, email: action.email };
@@ -46,13 +30,11 @@ const reducer = (state: IAuthCredentials, action: any) => {
 	}
 };
 
-
 const Register:React.FC = ()=> {
 	const navigate = useNavigate();
 	const [internalState, formDispatch] = useReducer(reducer, initState);
-	const taskDispatch = useTaskDispatch();
-	// TODO!: Remove any
-	const [user, setUser] = useState<any>(undefined)
+	const taskDispatch: dispatchContext = useTaskDispatch();
+
 
   // Email handler	
 	const onEmailChange = (e: React.BaseSyntheticEvent):void => {
@@ -74,9 +56,24 @@ const Register:React.FC = ()=> {
 	const handleInputs = async (e: React.BaseSyntheticEvent) =>{
 		e.preventDefault();
 		// Pass the values to the API call
-		const data = await registerAPI(internalState.email,internalState.username, internalState.password, internalState.passwordRepeat)
-		if(data){
-			setUser(data)
+		const response = await fetch('http://localhost:3001/users/register', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({
+			  email: internalState.email,
+			  username: internalState.username,
+			  password: internalState.password,
+			  passwordRepeat: internalState.passwordRepeat,
+			}),
+		  });
+		  const data: IUserContext = await response.json();
+		// If response is true(200) continue
+		if(response.ok){
+			const user: IUserContext = {
+				id: data['id'],
+				username: data['username'],
+				token: data['token'],
+			};
 			taskDispatch({ type: 'SET_USER', user: user });
 			taskDispatch({ type: 'SET_IS_LOGGED_IN', isLoggedIn: true });
 			navigate('/home');
@@ -85,11 +82,10 @@ const Register:React.FC = ()=> {
 		}
 	}
 
-
   return (
 	<div className="container flex-column input-container w-50 p-3 border border_style">
 	<div>
-		{/* <img src={Logo} alt="Logo-image" className="rounded mx-auto d-block " /> */}
+		<img src={Logo} alt="Logo-image" className="rounded mx-auto d-block " />
 	</div>
 
 	<h1 className="title">Register</h1>
@@ -153,7 +149,7 @@ const Register:React.FC = ()=> {
 		/>
 		<br />
 		<div className="d-grid gap-2">
-			<button>Submit</button>
+			<Button text={'Submit'} />
 		</div>
 	</form>
 	<Link to="/login" className="text flex-wrap link-light">

@@ -7,7 +7,8 @@ const Profile:React.FC = ()=> {
 	if (isLoggedIn) {
 		return (
 			<div>
-				<h1> Welcome Back ! </h1>
+				<h1> Welcome Back {taskState.user.username}! </h1>
+				<h1> Welcome Back {taskState.user.token}! </h1>
 			</div>
 		);
 	} else {

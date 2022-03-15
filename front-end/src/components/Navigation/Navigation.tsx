@@ -1,8 +1,8 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import Menu from '../../components/Header/Menu/Menu';
 import { useNavigate } from 'react-router-dom';
 import { useTaskDispatch, useTaskState } from '../../context/TaskContext';
+import { Button } from '../button/Button.component';
 
 const Navigation: React.FC = () => {
 	const taskDispatch = useTaskDispatch();
@@ -28,7 +28,9 @@ const Navigation: React.FC = () => {
 								Profile
 							</Link>
 						</div>
-						<button onClick={logOut} >Logout</button>
+					<div className="d-grid gap-2">
+						<Button text={'logOut'} onClick={logOut}/>
+					</div>
 					</div>
 				</nav>
 			</header>

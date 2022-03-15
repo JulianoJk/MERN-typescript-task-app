@@ -1,11 +1,5 @@
-import React, { useContext, useEffect, useReducer } from 'react'
-import {IUserContext} from '../Model/models'
-
-//interface for the default state
-interface StateInterface{
-    user:IUserContext
-    isLoggedIn: boolean
-}
+import React, { useContext, useReducer } from 'react'
+import { dispatchContext, StateInterface, TAction} from '../Model/models'
 
 // Default state fot the user context
 const defaultState: StateInterface= {
@@ -16,21 +10,8 @@ const defaultState: StateInterface= {
     },
     isLoggedIn: false
 }
-
-export type Action={
-  type: "SET_USER";
-  user: IUserContext
-}|{
-  type: "SET_IS_LOGGED_IN";
-  isLoggedIn: boolean
-}|{
-  type: "RESET_STATE"
-}
-
-// Type for the dispatch reducer
-export type dispatchContext =(action: Action)=> void
-
-const appReducer = (state: StateInterface, action: Action) => {
+// Reducer function 
+const appReducer = (state: StateInterface, action: TAction) => {
 	switch (action.type) {
 		case 'SET_USER':
 			return { ...state, user: action.user};
@@ -47,17 +28,10 @@ const TaskStateContext = React.createContext<StateInterface | undefined>(undefin
 TaskStateContext.displayName = 'TaskStateContext';
 const TaskDispatchContext = React.createContext<dispatchContext | undefined>(undefined);
 
-
-
-// TODO!: Remove any from props: any
+// TODO!: Replace props type
 const TaskContextProvider = (props: any) => {
 	const [state, dispatch] = useReducer(appReducer, defaultState);
 
-	useEffect(()=>{
-	// TODO:Delete
-	console.log(state);
-	},[state])
-	
 	return (
 		<TaskStateContext.Provider value={state}>
 			<TaskDispatchContext.Provider value={dispatch}>{props.children}</TaskDispatchContext.Provider>
@@ -74,6 +48,7 @@ const useTaskState = () => {
 	return context;
 };
 
+// Function to use the dispatch
 const useTaskDispatch = () => {
 	const context = useContext(TaskDispatchContext);
 	if (context === undefined) {

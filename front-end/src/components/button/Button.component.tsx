@@ -1,9 +1,13 @@
-import React from "react";
-
+import styles from './Button.module.css';
 interface IButtonProps {
-  label?: string;
+  text?: string;
+  onClick?: React.MouseEventHandler<HTMLButtonElement>
 }
-
-export const Button: React.FC<IButtonProps> = ({ label }) => {
-  return <button>{label ?? "Simple Button"}</button>;
+// Pass the text the button will have and the onClick event
+export const Button: React.FC<IButtonProps> = ({ text, onClick }) => {
+  return (
+    <button className={`btn btn-success flex-wrap ${styles.space}`} onClick={onClick}>
+      {text}
+    </button>
+  )
 };
