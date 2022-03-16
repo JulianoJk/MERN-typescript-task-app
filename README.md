@@ -9,6 +9,7 @@ This project aims to demonstrate the JWT authentication and authorization
 ### Front-End(client)
 ```
 $ cd ../client
+$ npm i @types/react-router-dom
 $ npm install update
 $ npm start
 ```
