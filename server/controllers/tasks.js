@@ -20,9 +20,9 @@ router.get("/get/:user_id",auth,  async (req, res) => {
 
 router.post("/add", auth , async (req, res) => {
     try {
-        let { name, user_id } = req.body 
+        let { taskName, user_id } = req.body 
         let newTask = new Task({
-            name: name,
+            taskName: taskName,
             user_id: user_id, 
             completed: false,
         })

@@ -1,7 +1,7 @@
 const mongoose = require("mongoose")
 
 const taskModel = new mongoose.Schema({
-    name: {type: String, required: true},
+    taskName: {type: String, required: true},
     user_id: {type: String, required: true},
     completed: {type: Boolean, required: true}
 
