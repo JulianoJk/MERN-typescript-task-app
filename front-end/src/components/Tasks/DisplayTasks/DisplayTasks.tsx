@@ -1,12 +1,14 @@
-import { useEffect } from "react";
 import { useTaskState } from "../../../context/TaskContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import styles from "./DisplayTasks.module.css";
 
 interface IDisplayTasks {
-  tasks: any;
+  todoArray: ITasks[];
   deleteTasks: (taskId: string) => Promise<void>;
+}
+interface Iindex {
+  [index: number]: number;
 }
 
 const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
@@ -34,37 +36,22 @@ const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
       console.log(error);
     }
   };
+
   return (
     <div>
-      {props.tasks
-        .map((todo: any, index: number) => (
+      {props.todoArray
+        .map((todo: any, index: any) => (
           <div
             key={index}
             className={`container flex-column ${styles.task_container}`}
           >
-            {/* Check for completion */}
-            <input
-              type="checkbox"
-              name="checkbox"
-              id={todo._id}
-              onClick={() => {
-                updateTasks(`${todo._id}`, todo.completed);
-              }}
-            />
             <label htmlFor={todo._id} className={`${styles.task}`}>
-              {todo.name}
+              {todo.taskName}
             </label>
-
-            {/* Delete task button */}
-            <Button
-              text={"Delete"}
-              onClick={() => {
-                props.deleteTasks(`${todo._id}`);
-              }}
-            />
           </div>
         ))
         .reverse()}
+
     </div>
   );
 };

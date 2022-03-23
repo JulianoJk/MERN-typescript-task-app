@@ -6,10 +6,11 @@ import DisplayTasks from "../DisplayTasks/DisplayTasks";
 
 const TaskForm: React.FC = () => {
   const { user } = useTaskState();
+  // TODO!: setTodoArray is called 2 times, fix it!
+  // TODO!: Change the setTodoArray to set when we submit a task not to callAPI everytime for that
 
   // Array with all the tasks, to display and save them locally
-  const todoArray: ITasks[] = [];
-
+  const [todoArray, setTodoArray] = useState<ITasks[]>([]);
   // Save user's tasks with the todo, user_id, and the status of the todo to send it to the server
   const [todo, setTodo] = useState<ITasks>({
     taskName: undefined,
@@ -40,6 +41,7 @@ const TaskForm: React.FC = () => {
         user_id: user.id,
         completed: false,
       });
+      setTodoArray([todo]);
       console.log("Tasks sended!");
     } else {
       console.warn("Empty string!");
@@ -60,9 +62,9 @@ const TaskForm: React.FC = () => {
         }
       );
 
-      const data: ITasks = await response.json();
+      const data: ITasks[] = await response.json();
       // Push the tasks returned from server to the todoArray
-      todoArray.push(data);
+      setTodoArray(data);
     } catch (error) {
       console.error(error);
     }
@@ -89,8 +91,11 @@ const TaskForm: React.FC = () => {
   useEffect(() => {
     submitTasks();
     getTasks();
-    console.log(JSON.stringify(todo));
+    console.warn(todoArray);
   }, [todo]);
+  useEffect(() => {
+    console.warn("SETTODO");
+  }, [todoArray]);
 
   const deleteTasks = async (taskId: string): Promise<void> => {
     try {
@@ -104,7 +109,6 @@ const TaskForm: React.FC = () => {
           _id: taskId,
         }),
       });
-      // Call the function to get the tasks after deletion
     } catch (error) {
       console.log(error);
     }
@@ -127,7 +131,7 @@ const TaskForm: React.FC = () => {
           <Button onClick={handlerTask} text={"Add task"} />
         </div>
       </form>
-      <DisplayTasks tasks={todoArray} deleteTasks={deleteTasks} />
+      <DisplayTasks todoArray={todoArray} deleteTasks={deleteTasks} />
     </div>
   );
 };
