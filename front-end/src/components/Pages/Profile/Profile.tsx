@@ -1,14 +1,12 @@
 import { useTaskState } from '../../../context/TaskContext';
 
 const Profile:React.FC = ()=> {
-	const taskState = useTaskState();
-	const isLoggedIn = taskState.isLoggedIn;
+	const {isLoggedIn, user} = useTaskState();
 
 	if (isLoggedIn) {
 		return (
 			<div>
-				<h1> Welcome Back {taskState.user.username}! </h1>
-				<h1> Welcome Back {taskState.user.token}! </h1>
+				<h1> Welcome Back {user.username}! </h1>
 			</div>
 		);
 	} else {

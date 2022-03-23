@@ -1,4 +1,4 @@
-import { IUserInfoContext } from "../Model/models";
+import { ITasks, IUserInfoContext } from "../Model/models";
 
 // API call to use when user wants to login
 

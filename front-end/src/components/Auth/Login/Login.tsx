@@ -57,7 +57,7 @@ const Login: React.FC = () => {
         </label>
         <input
           type="email"
-          className="form-control"
+          className="form-control email-icon"
           value={email}
           id="email"
           placeholder="name@example.com"
@@ -65,14 +65,13 @@ const Login: React.FC = () => {
           autoComplete="on"
         />
         <br />
-
         <label htmlFor="password" className="control-label text">
           <strong>Password:</strong>
         </label>
         <input
           type="password"
           value={password}
-          className="form-control"
+          className="form-control password-icon"
           id="password"
           onChange={onPasswordChange}
           placeholder="Password"

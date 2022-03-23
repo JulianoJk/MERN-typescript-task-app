@@ -1,62 +1,52 @@
 import { useEffect, useState } from "react";
 import { useTaskState } from "../../../context/TaskContext";
+import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 
 const TaskForm: React.FC = () => {
   const { user } = useTaskState();
-  const [tasks, setTasks] = useState<any>([]);
+
+  // Array with all the tasks, to display and save them locally
+  const todoArray: ITasks[] = [];
+
+  // Save user's tasks with the todo, user_id, and the status of the todo to send it to the server
+  const [todo, setTodo] = useState<ITasks>({
+    taskName: undefined,
+    user_id: undefined,
+    completed: undefined,
+  });
+
   const [input, setInput] = useState<string>("");
 
+  // Save task's information, containing taskName,
   const handleChange = (e: React.BaseSyntheticEvent): void => {
     setInput(e.target.value);
   };
 
+  // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
   const handleSubmit = (e: React.BaseSyntheticEvent): void => {
     e.preventDefault();
     setInput("");
   };
-  interface ITasks {
-    taskName: string | undefined;
-    user_id: string | undefined;
-    completed: boolean;
-  }
-  // Save task's information, containing taskName,
-  const [taskInfo, setTaskInfo] = useState<ITasks>({
-    taskName: undefined,
-    user_id: undefined,
-    completed: false,
-  });
 
-  const sendTasks = async (): Promise<void> => {
+  // set the task's values to return tp server and save tasks
+  const handlerTask = (): void => {
     if (input.trim() !== "") {
-      await fetch("http://localhost:3001/tasks/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": `${user.token}`,
-        },
-        body: JSON.stringify({
-          taskName: input,
-          user_id: user.id,
-          completed: false,
-        }),
-      });
-      console.log("Tasks sended!");
-      // Display tasks after every submit
-      //getTasks();
-      // Set the task description to the taskInfo state
-      setTaskInfo({
+      // Set the tasks with the user's id and the task status
+      setTodo({
+        ...todo,
         taskName: input,
         user_id: user.id,
         completed: false,
       });
-      setTasks(taskInfo);
+      console.log("Tasks sended!");
     } else {
       console.warn("Empty string!");
     }
   };
 
+  // get the tasks from the server and push to array
   const getTasks = async (): Promise<void> => {
     try {
       const response = await fetch(
@@ -70,19 +60,37 @@ const TaskForm: React.FC = () => {
         }
       );
 
-      const data = await response.json();
-      setTasks(data);
+      const data: ITasks = await response.json();
+      // Push the tasks returned from server to the todoArray
+      todoArray.push(data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
+    }
+  };
+
+  // Return tasks to server
+  const submitTasks = async () => {
+    if (input.trim() !== "") {
+      await fetch("http://localhost:3001/tasks/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": `${user.token}`,
+        },
+        body: JSON.stringify({
+          // return to the server the tasks object
+          ...todo,
+        }),
+      });
     }
   };
 
   // Display tasks every time the taskInfo is change
   useEffect(() => {
+    submitTasks();
     getTasks();
-    console.log(tasks);
-    console.log(taskInfo);
-  }, [taskInfo]);
+    console.log(JSON.stringify(todo));
+  }, [todo]);
 
   const deleteTasks = async (taskId: string): Promise<void> => {
     try {
@@ -97,32 +105,6 @@ const TaskForm: React.FC = () => {
         }),
       });
       // Call the function to get the tasks after deletion
-      // TODO: remove
-      //getTasks();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  const updateTasks = async (
-    taskId: string,
-    completedStatus: boolean
-  ): Promise<void> => {
-    // Update the completed state when the checkbox is pressed
-    let isCompleted: boolean = !completedStatus;
-    try {
-      await fetch(`http://localhost:3001/tasks/update`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": `${user.token}`,
-        },
-        body: JSON.stringify({
-          _id: taskId,
-          completed: isCompleted,
-        }),
-      });
-      // Call the function to get the tasks after update
-      ////getTasks();
     } catch (error) {
       console.log(error);
     }
@@ -142,14 +124,10 @@ const TaskForm: React.FC = () => {
         />
 
         <div className="d-grid gap-2">
-          <Button onClick={sendTasks} text={"Add task"} />
+          <Button onClick={handlerTask} text={"Add task"} />
         </div>
       </form>
-      <DisplayTasks
-        tasks={tasks}
-        deleteTasks={deleteTasks}
-        updateTasks={updateTasks}
-      />
+      <DisplayTasks tasks={todoArray} deleteTasks={deleteTasks} />
     </div>
   );
 };

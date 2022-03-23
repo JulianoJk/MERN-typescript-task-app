@@ -47,9 +47,8 @@ export interface IAuthCredentials {
   passwordRepeat?: string | undefined;
 }
 
-export interface ITodo {
-  name: string | undefined;
-  _id: string | undefined;
-  todo: string[];
-  completed: boolean;
+export interface ITasks {
+  taskName: string | undefined;
+  user_id: string | undefined;
+  completed: boolean | undefined;
 }

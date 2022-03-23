@@ -65,7 +65,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     try {
       const data = await registerAPI(
-        `${internalState.username}`,
+        `${internalState.email}`,
         `${internalState.username}`,
         `${internalState.password}`,
         `${internalState.passwordRepeat}`
@@ -102,7 +102,7 @@ const Register: React.FC = () => {
         <input
           type="email"
           value={initState.email}
-          className="form-control"
+          className="form-control email-icon"
           id="email"
           placeholder="name@example.com"
           onChange={onEmailChange}
@@ -112,12 +112,12 @@ const Register: React.FC = () => {
         />
         <br />
         <label htmlFor="Username" className="control-label text">
-          <strong>Username:</strong>
+          <strong>Username: (optional)</strong>
         </label>
         <input
           type="text"
           value={initState.username}
-          className="form-control"
+          className="form-control user-icon"
           id="Username"
           placeholder="John Smith"
           onChange={onNameChange}
@@ -130,7 +130,7 @@ const Register: React.FC = () => {
         <input
           type="password"
           value={initState.password}
-          className="form-control"
+          className="form-control password-icon"
           id="password"
           placeholder="Password"
           onChange={handlePassword}
@@ -145,7 +145,7 @@ const Register: React.FC = () => {
         <input
           type="password"
           value={initState.passwordRepeat}
-          className="form-control"
+          className="form-control password-icon"
           id="confirmPassword"
           placeholder="Confirm Password"
           onChange={handleConfirmPassword}

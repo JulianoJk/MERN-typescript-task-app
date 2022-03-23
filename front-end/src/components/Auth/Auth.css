@@ -9,3 +9,21 @@
     justify-content: center;
     align-items: center;
 }
+.password-icon {
+    padding-left: 25px;
+    background: url("../../images/password.png") no-repeat left;
+    background-color: white;
+    background-size: 25px;
+}
+.email-icon{
+    padding-left: 25px;
+    background: url("../../images/email.png") no-repeat left;
+    background-color: white;
+    background-size: 25px;
+}
+.user-icon{
+    padding-left: 25px;
+    background: url("../../images/username-icon.png") no-repeat left;
+    background-color: white;
+    background-size: 25px;
+}

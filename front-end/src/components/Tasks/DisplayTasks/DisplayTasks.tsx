@@ -1,22 +1,43 @@
 import { useEffect } from "react";
-import { ITodo } from "../../../Model/models";
+import { useTaskState } from "../../../context/TaskContext";
+import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import styles from "./DisplayTasks.module.css";
 
 interface IDisplayTasks {
   tasks: any;
-  deleteTasks(taskId: string): void;
-  updateTasks(taskId: string, completedStatus: boolean): void;
+  deleteTasks: (taskId: string) => Promise<void>;
 }
 
 const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
-  // useEffect(() => {
-  //   console.log(props.tasks.completed);
-  // }, [props.tasks.completed]);
+  const { user } = useTaskState();
+
+  const updateTasks = async (
+    taskId: string,
+    completedStatus: boolean
+  ): Promise<void> => {
+    // Update the completed state when the checkbox is pressed
+    let isCompleted = !completedStatus;
+    try {
+      await fetch(`http://localhost:3001/tasks/update`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "x-access-token": `${user.token}`,
+        },
+        body: JSON.stringify({
+          _id: taskId,
+          completed: isCompleted,
+        }),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       {props.tasks
-        .map((todo: ITodo, index: number) => (
+        .map((todo: any, index: number) => (
           <div
             key={index}
             className={`container flex-column ${styles.task_container}`}
@@ -27,7 +48,7 @@ const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
               name="checkbox"
               id={todo._id}
               onClick={() => {
-                props.updateTasks(`${todo._id}`, todo.completed);
+                updateTasks(`${todo._id}`, todo.completed);
               }}
             />
             <label htmlFor={todo._id} className={`${styles.task}`}>
