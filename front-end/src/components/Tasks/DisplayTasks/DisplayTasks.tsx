@@ -5,12 +5,8 @@ import styles from "./DisplayTasks.module.css";
 
 interface IDisplayTasks {
   todoArray: ITasks[];
-  deleteTasks: (taskId: string) => Promise<void>;
+  deleteTasks(taskId: string): Promise<void>
 }
-interface Iindex {
-  [index: number]: number;
-}
-
 const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
   const { user } = useTaskState();
 
@@ -37,6 +33,8 @@ const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
     }
   };
 
+
+
   return (
     <div>
       {props.todoArray
@@ -45,13 +43,26 @@ const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
             key={index}
             className={`container flex-column ${styles.task_container}`}
           >
+            {/* Change complete status of a task */}
+            <input
+              type="checkbox"
+              name="checkbox"
+              id={todo._id}
+              onClick={() => updateTasks(todo._id, todo.completed)}
+            />
             <label htmlFor={todo._id} className={`${styles.task}`}>
               {todo.taskName}
             </label>
+            {/* Delete a task */}
+            <Button
+              text={"Delete"}
+              onClick={() => {
+                props.deleteTasks(todo._id);
+              }}
+            />
           </div>
         ))
         .reverse()}
-
     </div>
   );
 };

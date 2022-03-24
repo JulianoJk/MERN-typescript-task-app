@@ -6,8 +6,6 @@ import DisplayTasks from "../DisplayTasks/DisplayTasks";
 
 const TaskForm: React.FC = () => {
   const { user } = useTaskState();
-  // TODO!: setTodoArray is called 2 times, fix it!
-  // TODO!: Change the setTodoArray to set when we submit a task not to callAPI everytime for that
 
   // Array with all the tasks, to display and save them locally
   const [todoArray, setTodoArray] = useState<ITasks[]>([]);
@@ -25,12 +23,6 @@ const TaskForm: React.FC = () => {
     setInput(e.target.value);
   };
 
-  // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
-  const handleSubmit = (e: React.BaseSyntheticEvent): void => {
-    e.preventDefault();
-    setInput("");
-  };
-
   // set the task's values to return tp server and save tasks
   const handlerTask = (): void => {
     if (input.trim() !== "") {
@@ -41,11 +33,29 @@ const TaskForm: React.FC = () => {
         user_id: user.id,
         completed: false,
       });
-      setTodoArray([todo]);
-      console.log("Tasks sended!");
     } else {
       console.warn("Empty string!");
     }
+  };
+
+  // Return tasks to server
+  const submitTasks = async (): Promise<void> => {
+    await fetch("http://localhost:3001/tasks/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": `${user.token}`,
+      },
+      body: JSON.stringify({
+        // return to the server the tasks object
+        ...todo,
+      }),
+    });
+    // Set the todo array to the todo object
+    setTodoArray([...todoArray, todo]);
+    console.log(todoArray);
+
+    console.log("Tasks sended!");
   };
 
   // get the tasks from the server and push to array
@@ -61,7 +71,6 @@ const TaskForm: React.FC = () => {
           },
         }
       );
-
       const data: ITasks[] = await response.json();
       // Push the tasks returned from server to the todoArray
       setTodoArray(data);
@@ -70,34 +79,7 @@ const TaskForm: React.FC = () => {
     }
   };
 
-  // Return tasks to server
-  const submitTasks = async () => {
-    if (input.trim() !== "") {
-      await fetch("http://localhost:3001/tasks/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": `${user.token}`,
-        },
-        body: JSON.stringify({
-          // return to the server the tasks object
-          ...todo,
-        }),
-      });
-    }
-  };
-
-  // Display tasks every time the taskInfo is change
-  useEffect(() => {
-    submitTasks();
-    getTasks();
-    console.warn(todoArray);
-  }, [todo]);
-  useEffect(() => {
-    console.warn("SETTODO");
-  }, [todoArray]);
-
-  const deleteTasks = async (taskId: string): Promise<void> => {
+  const deleteTasks = async (taskId: any): Promise<void> => {
     try {
       await fetch(`http://localhost:3001/tasks/delete`, {
         method: "DELETE",
@@ -109,14 +91,28 @@ const TaskForm: React.FC = () => {
           _id: taskId,
         }),
       });
+      let b = todoArray.findIndex(taskId);
+      todoArray.splice(b);
     } catch (error) {
       console.log(error);
     }
   };
 
+  // Display tasks every time the taskInfo is change
+  useEffect(() => {
+    getTasks();
+  }, []);
+
+  // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
+  const handleFormSubmit = (e: React.BaseSyntheticEvent): void => {
+    e.preventDefault();
+    submitTasks();
+    setInput("");
+  };
+
   return (
     <div className="container flex-column input-container w-50 p-3 border">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleFormSubmit}>
         <input
           type="text"
           className="form-control"
