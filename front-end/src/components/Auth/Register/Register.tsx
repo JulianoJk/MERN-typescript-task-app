@@ -1,12 +1,12 @@
 import { useReducer } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
-  dispatchContext,
   EActionTypes,
   IAuthCredentials,
   IUserInfoContext,
+  usersDispatchContext,
 } from "../../../Model/models";
-import { useTaskDispatch } from "../../../context/TaskContext";
+import { useUserDispatch } from "../../../context/TaskContext";
 import { Button } from "../../button/Button.component";
 import { registerAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
@@ -39,7 +39,7 @@ const reducer = (state: IAuthCredentials, action: IAuthCredentials) => {
 const Register: React.FC = () => {
   const navigate = useNavigate();
   const [internalState, formDispatch] = useReducer(reducer, initState);
-  const taskDispatch: dispatchContext = useTaskDispatch();
+  const taskDispatch: usersDispatchContext = useUserDispatch();
 
   // Email handler
   const onEmailChange = (e: React.BaseSyntheticEvent): void => {

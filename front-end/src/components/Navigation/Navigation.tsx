@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import Menu from "../../components/Header/Menu/Menu";
 import { useNavigate } from "react-router-dom";
-import { useTaskDispatch, useTaskState } from "../../context/TaskContext";
+import { useUserDispatch, useUserState } from "../../context/TaskContext";
 import { Button } from "../button/Button.component";
 
 const Navigation: React.FC = () => {
-  const taskDispatch = useTaskDispatch();
-  const taskState = useTaskState();
+  const taskDispatch = useUserDispatch();
+  const taskState = useUserState();
   const isLoggedIn = taskState.isLoggedIn;
   const navigate = useNavigate();
 

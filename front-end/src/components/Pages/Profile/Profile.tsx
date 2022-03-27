@@ -1,7 +1,7 @@
-import { useTaskState } from '../../../context/TaskContext';
+import { useUserState } from '../../../context/TaskContext';
 
 const Profile:React.FC = ()=> {
-	const {isLoggedIn, user} = useTaskState();
+	const {isLoggedIn, user} = useUserState();
 
 	if (isLoggedIn) {
 		return (

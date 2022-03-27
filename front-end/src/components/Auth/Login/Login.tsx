@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { useTaskDispatch } from "../../../context/TaskContext";
-import { dispatchContext, IUserInfoContext } from "../../../Model/models";
+import { useUserDispatch } from "../../../context/TaskContext";
+import { IUserInfoContext, usersDispatchContext } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import { loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
@@ -12,7 +12,7 @@ const Login: React.FC = () => {
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const taskDispatch: dispatchContext = useTaskDispatch();
+  const taskDispatch: usersDispatchContext = useUserDispatch();
 
   // Email handler
   const onEmailChange = (e: React.BaseSyntheticEvent): void => {
