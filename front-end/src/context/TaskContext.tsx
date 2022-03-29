@@ -53,7 +53,8 @@ const TodoArrayContext = React.createContext<ITasks[] | undefined>(undefined);
 const taskReducer = (state: ITasks[], action: TTaskActionContext) => {
   switch (action.type) {
     case "ADD_TASK":
-      return { ...state, tasks: action.tasks };
+      // Add the tasks to the array
+      return [ ...state,  action.tasks ];
     case "DELETE_TASK":
       return { ...state, tasks: action.tasks };
     default:
@@ -118,7 +119,7 @@ const useUserDispatch = () => {
 };
 // Pass the state of the user
 const useTaskState = () => {
-  const context = useContext(UserStateContext);
+  const context = useContext(TodoArrayContext);
   if (context === undefined) {
     throw new Error("useTaskState must be used within TaskContextProvider");
   }
@@ -127,11 +128,11 @@ const useTaskState = () => {
 
 // Function to use the userDispatch
 const useTaskDispatch = () => {
-  const context = useContext(UserDispatchContext);
+  const context = useContext(TaskDispatchContext);
   if (context === undefined) {
     throw new Error("useTaskDispatch must be used within TaskContextProvider");
   }
   return context;
 };
 
-export { UserContextProvider, useUserState, useUserDispatch };
+export { UserContextProvider, useUserState, useUserDispatch, TasksContextProvider, useTaskState, useTaskDispatch };
