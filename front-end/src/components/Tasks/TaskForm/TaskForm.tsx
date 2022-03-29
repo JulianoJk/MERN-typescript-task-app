@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
-import { useTaskDispatch, useTaskState, useUserState } from "../../../context/TaskContext";
+import {
+  useTaskDispatch,
+  useTaskState,
+  useUserState,
+} from "../../../context/TaskContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 
-
 const TaskForm: React.FC = () => {
   const { user } = useUserState();
-  const todos = useTaskState()
-  const setTodo = useTaskDispatch()
-
-
-
+  // Get the tasks from the context
+  const todos = useTaskState();
+  // Dispatch to set the tasks in the context
+  const setTodoDispatch = useTaskDispatch();
   const [input, setInput] = useState<string>("");
 
   // Save task's information, containing taskName,
@@ -23,15 +25,12 @@ const TaskForm: React.FC = () => {
   const handlerTask = (): void => {
     if (input.trim() !== "") {
       // Set the tasks with the user's id and the task status
-      const b: any = ({
+      const b: any = {
         taskName: input,
         user_id: user.id,
         completed: false,
-      });
-      setTodo({type: "ADD_TASK", tasks: b})
-      console.warn(todos);
-
-
+      };
+      setTodoDispatch({ type: "ADD_TASK", tasks: b });
     } else {
       console.warn("Empty string!");
     }
@@ -92,7 +91,7 @@ const TaskForm: React.FC = () => {
 
   // Display tasks every time the taskInfo is change
   useEffect(() => {
-    getTasks();    
+    getTasks();
   }, []);
 
   // prevent form's default action, then set the input state to empty(after user submits, clear the input field)

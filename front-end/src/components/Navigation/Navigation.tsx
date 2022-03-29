@@ -1,20 +1,28 @@
 import { Link } from "react-router-dom";
 import Menu from "../../components/Header/Menu/Menu";
 import { useNavigate } from "react-router-dom";
-import { useUserDispatch, useUserState } from "../../context/TaskContext";
+import {
+  useTaskDispatch,
+  useUserDispatch,
+  useUserState,
+} from "../../context/TaskContext";
 import { Button } from "../button/Button.component";
 
 const Navigation: React.FC = () => {
-  const taskDispatch = useUserDispatch();
-  const taskState = useUserState();
-  const isLoggedIn = taskState.isLoggedIn;
+  const userDispatch = useUserDispatch();
+  const { isLoggedIn } = useUserState();
   const navigate = useNavigate();
 
+  const todoDispatch = useTaskDispatch();
+
+  // After logout, clear the context for the user and tasks, then navigate to index
   const logOut = () => {
-    taskDispatch({ type: "RESET_STATE" });
+    userDispatch({ type: "RESET_STATE" });
+    todoDispatch({ type: "RESET_STATE" });
     navigate("/");
   };
 
+  // Check if is user is logged or not
   if (isLoggedIn) {
     return (
       <header>

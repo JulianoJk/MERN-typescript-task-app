@@ -27,7 +27,8 @@ export type TUserAction =
       type: "RESET_STATE";
     };
 // Type for the action for the context
-export type TTaskActionContext = {
+export type TTaskActionContext =
+  | {
       type: "ADD_TASK";
       tasks: ITasks;
     }
@@ -35,12 +36,14 @@ export type TTaskActionContext = {
       type: "DELETE_TASK";
       tasks: ITasks;
     }
+  | {
+      type: "RESET_STATE";
+    };
 // Type for the dispatch reducer user
 export type usersDispatchContext = (action: TUserAction) => void;
 
 // Dispatch reducer for the task
 export type taskDispatchContext = (action: TTaskActionContext) => void;
-
 
 // An enum with all the types of actions to use in the registration useReduce
 export enum EActionTypes {

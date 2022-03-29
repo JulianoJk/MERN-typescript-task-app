@@ -18,14 +18,9 @@ const defaultState: StateInterface = {
   isLoggedIn: false,
 };
 
-// TODO:Check
-const defaultTaskArray: ITasks[] = [
-  {
-    taskName: undefined,
-    user_id: undefined,
-    completed: undefined,
-  },
-];
+// Create an empty default array for the tasks
+// INFO: The array is empty due to if we assign undefined or empty values, it is going to be displayed
+const defaultTaskArray: ITasks[] = [];
 
 // Interface for the TaskContextProvider children
 interface ITaskContextProvider {
@@ -45,7 +40,6 @@ const TaskDispatchContext = React.createContext<
   taskDispatchContext | undefined
 >(undefined);
 
-// TODO!: Check
 // Context for the tasks
 const TodoArrayContext = React.createContext<ITasks[] | undefined>(undefined);
 
@@ -54,9 +48,13 @@ const taskReducer = (state: ITasks[], action: TTaskActionContext) => {
   switch (action.type) {
     case "ADD_TASK":
       // Add the tasks to the array
-      return [ ...state,  action.tasks ];
+      return [...state, action.tasks];
     case "DELETE_TASK":
-      return { ...state, tasks: action.tasks };
+      // TODO!: Add findIndex() to delete by id
+      return [...state, action.tasks];
+    case "RESET_STATE":
+      // After logout, empty the array with tasks from context
+      return [...defaultTaskArray];
     default:
       return { ...state };
   }
@@ -74,19 +72,6 @@ const appReducer = (state: StateInterface, action: TUserAction) => {
     default:
       return { ...state };
   }
-};
-
-// TODO!:Check
-const TasksContextProvider = ({ children }: ITaskContextProvider) => {
-  const [taskState, taskDispatch] = useReducer(taskReducer, defaultTaskArray);
-
-  return (
-    <TodoArrayContext.Provider value={taskState}>
-      <TaskDispatchContext.Provider value={taskDispatch}>
-        {children}
-      </TaskDispatchContext.Provider>
-    </TodoArrayContext.Provider>
-  );
 };
 
 const UserContextProvider = ({ children }: ITaskContextProvider) => {
@@ -117,6 +102,20 @@ const useUserDispatch = () => {
   }
   return context;
 };
+
+// TODO!:Check
+const TasksContextProvider = ({ children }: ITaskContextProvider) => {
+  const [taskState, taskDispatch] = useReducer(taskReducer, defaultTaskArray);
+
+  return (
+    <TodoArrayContext.Provider value={taskState}>
+      <TaskDispatchContext.Provider value={taskDispatch}>
+        {children}
+      </TaskDispatchContext.Provider>
+    </TodoArrayContext.Provider>
+  );
+};
+
 // Pass the state of the user
 const useTaskState = () => {
   const context = useContext(TodoArrayContext);
@@ -135,4 +134,11 @@ const useTaskDispatch = () => {
   return context;
 };
 
-export { UserContextProvider, useUserState, useUserDispatch, TasksContextProvider, useTaskState, useTaskDispatch };
+export {
+  UserContextProvider,
+  useUserState,
+  useUserDispatch,
+  TasksContextProvider,
+  useTaskState,
+  useTaskDispatch,
+};

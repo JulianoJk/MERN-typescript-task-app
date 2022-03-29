@@ -7,10 +7,9 @@ interface IDisplayTasks {
   deleteTasks(taskId: string): Promise<void>;
 }
 const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
-  const todos = useTaskState();
+  const todos: ITasks[] = useTaskState();
   const { user } = useUserState();
 
-  
   return (
     <div>
       {todos
