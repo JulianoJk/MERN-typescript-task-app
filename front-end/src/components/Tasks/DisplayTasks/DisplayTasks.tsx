@@ -1,33 +1,33 @@
-import { useTaskState, useUserState } from "../../../context/TaskContext";
+import { useTaskDispatch, useTaskState, useUserState } from "../../../context/TaskContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import styles from "./DisplayTasks.module.css";
 
-interface IDisplayTasks {
-  deleteTasks(taskId: string): Promise<void>;
-}
-const DisplayTasks: React.FC<IDisplayTasks> = (props: IDisplayTasks) => {
+const DisplayTasks: React.FC = () => {
   const todos: ITasks[] = useTaskState();
   const { user } = useUserState();
+  const todoDispatch = useTaskDispatch();
+
 
   return (
     <div>
       {todos
-        .map((todo: any, index: any) => (
+        .map((todo: ITasks, index: number) => (
           <div
             key={index}
             className={`container flex-column ${styles.task_container}`}
           >
             {/* Change complete status of a task */}
-            <input type="checkbox" name="checkbox" id={todo._id} />
-            <label htmlFor={todo._id} className={`${styles.task}`}>
+            <input type="checkbox" name="checkbox" id={todo.taskID} />
+            <label htmlFor={todo.taskID} className={`${styles.task}`}>
               {todo.taskName}
             </label>
             {/* Delete a task */}
             <Button
               text={"Delete"}
               onClick={() => {
-                props.deleteTasks(todo._id);
+                // Delete the task 
+                todoDispatch({type: "DELETE_TASK", taskID: todo.taskID});
               }}
             />
           </div>

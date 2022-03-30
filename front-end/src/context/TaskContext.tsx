@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from "react";
+import React, { useContext, useEffect, useReducer } from "react";
 import {
   usersDispatchContext,
   taskDispatchContext,
@@ -20,7 +20,9 @@ const defaultState: StateInterface = {
 
 // Create an empty default array for the tasks
 // INFO: The array is empty due to if we assign undefined or empty values, it is going to be displayed
-const defaultTaskArray: ITasks[] = [];
+const defaultTaskArray: ITasks[] = [
+  
+];
 
 // Interface for the TaskContextProvider children
 interface ITaskContextProvider {
@@ -50,8 +52,8 @@ const taskReducer = (state: ITasks[], action: TTaskActionContext) => {
       // Add the tasks to the array
       return [...state, action.tasks];
     case "DELETE_TASK":
-      // TODO!: Add findIndex() to delete by id
-      return [...state, action.tasks];
+      return state.filter((item: ITasks) => item.taskID !== action.taskID);
+
     case "RESET_STATE":
       // After logout, empty the array with tasks from context
       return [...defaultTaskArray];
@@ -59,6 +61,7 @@ const taskReducer = (state: ITasks[], action: TTaskActionContext) => {
       return { ...state };
   }
 };
+
 
 // Reducer function
 const appReducer = (state: StateInterface, action: TUserAction) => {
@@ -106,6 +109,10 @@ const useUserDispatch = () => {
 // TODO!:Check
 const TasksContextProvider = ({ children }: ITaskContextProvider) => {
   const [taskState, taskDispatch] = useReducer(taskReducer, defaultTaskArray);
+  useEffect(()=>{
+    console.log(taskState);
+    
+  },[taskState])
 
   return (
     <TodoArrayContext.Provider value={taskState}>

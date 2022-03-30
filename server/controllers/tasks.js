@@ -18,15 +18,12 @@ router.get("/get/:user_id", auth, async (req, res) => {
 
 router.post("/add", auth, async (req, res) => {
   try {
-    // From the request body, save the tasks and assign a new task from the values the object contains
-    let tasks = req.body
-    let newTask = new Task({
-      taskName: tasks["taskName"],
-      user_id: tasks["user_id"],
-      completed: tasks["completed"],
-    });
-    const saved = await newTask.save();
+    // From the request body, save the document array and assign a new task from the values the object contains
+    let tasks = req.body.todos
+    // save multiple documents to the collection referenced by Task Model    
+    const saved = await Task.collection.insertMany(tasks)
     res.json(saved);
+
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

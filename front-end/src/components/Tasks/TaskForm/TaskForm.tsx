@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { v4 as uuid } from "uuid";
+import { submitTasks } from "../../../API/Api";
 import {
   useTaskDispatch,
   useTaskState,
@@ -11,7 +13,7 @@ import DisplayTasks from "../DisplayTasks/DisplayTasks";
 const TaskForm: React.FC = () => {
   const { user } = useUserState();
   // Get the tasks from the context
-  const todos = useTaskState();
+  const todos: ITasks[] = useTaskState();
   // Dispatch to set the tasks in the context
   const setTodoDispatch = useTaskDispatch();
   const [input, setInput] = useState<string>("");
@@ -21,36 +23,24 @@ const TaskForm: React.FC = () => {
     setInput(e.target.value);
   };
 
+  // Create a unique ID for the task
+  const unique_id = uuid();
+
   // set the task's values to return tp server and save tasks
   const handlerTask = (): void => {
     if (input.trim() !== "") {
       // Set the tasks with the user's id and the task status
-      const b: any = {
+      const newTask: ITasks = {
         taskName: input,
         user_id: user.id,
         completed: false,
+        taskID: unique_id,
       };
-      setTodoDispatch({ type: "ADD_TASK", tasks: b });
+      setTodoDispatch({ type: "ADD_TASK", tasks: newTask });
     } else {
       console.warn("Empty string!");
     }
   };
-
-  // Return tasks to server
-  // const submitTasks = async (): Promise<void> => {
-  //   await fetch("http://localhost:3001/tasks/add", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       "x-access-token": `${user.token}`,
-  //     },
-  //     body: JSON.stringify({
-  //       // return to the server the tasks object
-  //       ...todos,
-  //     }),
-  //   });
-  //   console.log("Tasks sended!");
-  // };
 
   // get the tasks from the server and push to array
   const getTasks = async (): Promise<void> => {
@@ -65,39 +55,23 @@ const TaskForm: React.FC = () => {
           },
         }
       );
-      const data: ITasks[] = await response.json();
+      const data: any = await response.json();
       // Push the tasks returned from server to the todoArray
     } catch (error) {
       console.error(error);
     }
   };
 
-  const deleteTasks = async (taskId: any): Promise<void> => {
-    try {
-      await fetch(`http://localhost:3001/tasks/delete`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "x-access-token": `${user.token}`,
-        },
-        body: JSON.stringify({
-          _id: taskId,
-        }),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // Display tasks every time the taskInfo is change
   useEffect(() => {
-    getTasks();
-  }, []);
+    getTasks();    
+  }, [todos]);
 
   // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
   const handleFormSubmit = (e: React.BaseSyntheticEvent): void => {
     e.preventDefault();
-    // submitTasks();
+    submitTasks(user, todos)
     setInput("");
   };
 
@@ -118,7 +92,7 @@ const TaskForm: React.FC = () => {
           <Button onClick={handlerTask} text={"Add task"} />
         </div>
       </form>
-      <DisplayTasks deleteTasks={deleteTasks} />
+      <DisplayTasks />
     </div>
   );
 };

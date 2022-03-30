@@ -54,3 +54,22 @@ export const registerAPI = async (
     return null;
   }
 };
+
+// Return tasks to server
+export const submitTasks = async (
+  user: IUserInfoContext,
+  todos: ITasks[]
+): Promise<void> => {
+  await fetch("http://localhost:3001/tasks/add", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-access-token": `${user.token}`,
+    },
+    body: JSON.stringify({
+      // return to the server the tasks object
+      todos,
+    }),
+  });
+  console.log("Tasks sended!");
+};

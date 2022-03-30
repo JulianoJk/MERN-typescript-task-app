@@ -32,9 +32,10 @@ export type TTaskActionContext =
       type: "ADD_TASK";
       tasks: ITasks;
     }
+  // to delete the task from the task array in context, 
   | {
-      type: "DELETE_TASK";
-      tasks: ITasks;
+      type: "DELETE_TASK"; 
+      taskID: number;
     }
   | {
       type: "RESET_STATE";
@@ -66,4 +67,6 @@ export interface ITasks {
   taskName: string | undefined;
   user_id: string | undefined;
   completed: boolean | undefined;
+  // Add a id to each task to use it locally 
+  taskID: any
 }
