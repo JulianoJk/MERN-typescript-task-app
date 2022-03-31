@@ -1,17 +1,38 @@
-import { useTaskDispatch, useTaskState, useUserState } from "../../../context/TaskContext";
+import { useEffect } from "react";
+import { submitTasks } from "../../../API/Api";
+import {
+  useTaskDispatch,
+  useTaskState,
+  useUserState,
+} from "../../../context/TaskContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import styles from "./DisplayTasks.module.css";
 
 const DisplayTasks: React.FC = () => {
-  const todos: ITasks[] = useTaskState();
+  const taskState = useTaskState();
+  const taskDispatch = useTaskDispatch();
   const { user } = useUserState();
-  const todoDispatch = useTaskDispatch();
 
+
+  // Delete the task
+  const handleDelete = (taskID: string) => {
+    taskDispatch({
+      type: "DELETE_TASK",
+      payload: { taskID: taskID },
+    });
+  };
+
+  const handleToggle = (taskID: string) => {
+    taskDispatch({
+      type: "UPDATE_TASK",
+      payload: { taskID: taskID },
+    });
+  };
 
   return (
     <div>
-      {todos
+      {taskState
         .map((todo: ITasks, index: number) => (
           <div
             key={index}
@@ -23,13 +44,7 @@ const DisplayTasks: React.FC = () => {
               {todo.taskName}
             </label>
             {/* Delete a task */}
-            <Button
-              text={"Delete"}
-              onClick={() => {
-                // Delete the task 
-                todoDispatch({type: "DELETE_TASK", taskID: todo.taskID});
-              }}
-            />
+            <Button text={"Delete"} onClick={() => handleDelete(todo.taskID)} />
           </div>
         ))
         .reverse()}

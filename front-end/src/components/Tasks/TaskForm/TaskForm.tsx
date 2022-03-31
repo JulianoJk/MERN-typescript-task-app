@@ -1,21 +1,18 @@
 import { useEffect, useState } from "react";
-import { v4 as uuid } from "uuid";
 import { submitTasks } from "../../../API/Api";
-import {
-  useTaskDispatch,
-  useTaskState,
-  useUserState,
-} from "../../../context/TaskContext";
-import { ITasks } from "../../../Model/models";
+import { useTaskDispatch, useTaskState, useUserState } from "../../../context/TaskContext";
 import { Button } from "../../button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 
 const TaskForm: React.FC = () => {
   const { user } = useUserState();
-  // Get the tasks from the context
-  const todos: ITasks[] = useTaskState();
-  // Dispatch to set the tasks in the context
+  const taskState = useTaskState();
+  const taskDispatch = useTaskDispatch();
+
+
+  // Dispatch reducer for the task
   const setTodoDispatch = useTaskDispatch();
+
   const [input, setInput] = useState<string>("");
 
   // Save task's information, containing taskName,
@@ -23,20 +20,10 @@ const TaskForm: React.FC = () => {
     setInput(e.target.value);
   };
 
-  // Create a unique ID for the task
-  const unique_id = uuid();
-
   // set the task's values to return tp server and save tasks
   const handlerTask = (): void => {
     if (input.trim() !== "") {
-      // Set the tasks with the user's id and the task status
-      const newTask: ITasks = {
-        taskName: input,
-        user_id: user.id,
-        completed: false,
-        taskID: unique_id,
-      };
-      setTodoDispatch({ type: "ADD_TASK", tasks: newTask });
+      setTodoDispatch({ type: "ADD_TASK", payload: { taskName: input } });
     } else {
       console.warn("Empty string!");
     }
@@ -62,16 +49,15 @@ const TaskForm: React.FC = () => {
     }
   };
 
-
   // Display tasks every time the taskInfo is change
   useEffect(() => {
-    getTasks();    
-  }, [todos]);
+    getTasks();
+  }, []);
 
   // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
   const handleFormSubmit = (e: React.BaseSyntheticEvent): void => {
     e.preventDefault();
-    submitTasks(user, todos)
+    submitTasks(user, taskState)  
     setInput("");
   };
 

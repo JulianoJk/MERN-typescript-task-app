@@ -26,25 +26,30 @@ export type TUserAction =
   | {
       type: "RESET_STATE";
     };
-// Type for the action for the context
-export type TTaskActionContext =
-  | {
-      type: "ADD_TASK";
-      tasks: ITasks;
-    }
-  // to delete the task from the task array in context, 
-  | {
-      type: "DELETE_TASK"; 
-      taskID: number;
-    }
-  | {
-      type: "RESET_STATE";
-    };
+
+// Interface for the reducer action to add tasks
+interface AddTodoAction {
+  type: "ADD_TASK";
+  payload: { taskName: string };
+}
+// Interface for the reducer action to update and delete
+interface ModifyTodoAction {
+  type: "UPDATE_TASK" | "DELETE_TASK";
+  payload: { taskID: string };
+}
+// Delete all locally saved tasks
+interface ResetTodoAction {
+  type: "RESET_STATE";
+}
+
+// Dispatch reducer for the task
+export type TodoAction = AddTodoAction | ModifyTodoAction | ResetTodoAction;
+
 // Type for the dispatch reducer user
 export type usersDispatchContext = (action: TUserAction) => void;
 
-// Dispatch reducer for the task
-export type taskDispatchContext = (action: TTaskActionContext) => void;
+// Type for the dispatch reducer task
+export type taskDispatchContext = (action: TodoAction) => void;
 
 // An enum with all the types of actions to use in the registration useReduce
 export enum EActionTypes {
@@ -64,9 +69,7 @@ export interface IAuthCredentials {
 }
 
 export interface ITasks {
-  taskName: string | undefined;
-  user_id: string | undefined;
-  completed: boolean | undefined;
-  // Add a id to each task to use it locally 
-  taskID: any
+  taskName: string;
+  taskID: string;
+  completed: boolean;
 }

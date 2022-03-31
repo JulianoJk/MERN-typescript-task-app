@@ -1,12 +1,14 @@
-import React, { useContext, useEffect, useReducer } from "react";
+import React, { useContext, useReducer } from "react";
 import {
   usersDispatchContext,
-  taskDispatchContext,
+  TodoAction,
   ITasks,
   StateInterface,
   TUserAction,
-  TTaskActionContext,
+  taskDispatchContext,
 } from "../Model/models";
+import { v4 as uuid } from "uuid";
+import DisplayTasks from "../components/Tasks/DisplayTasks/DisplayTasks";
 
 // Default state fot the user context
 const defaultState: StateInterface = {
@@ -17,12 +19,6 @@ const defaultState: StateInterface = {
   },
   isLoggedIn: false,
 };
-
-// Create an empty default array for the tasks
-// INFO: The array is empty due to if we assign undefined or empty values, it is going to be displayed
-const defaultTaskArray: ITasks[] = [
-  
-];
 
 // Interface for the TaskContextProvider children
 interface ITaskContextProvider {
@@ -37,31 +33,32 @@ const UserDispatchContext = React.createContext<
   usersDispatchContext | undefined
 >(undefined);
 
-// TODO:Check
-const TaskDispatchContext = React.createContext<
-  taskDispatchContext | undefined
->(undefined);
-
-// Context for the tasks
-const TodoArrayContext = React.createContext<ITasks[] | undefined>(undefined);
-
 // Reducer function for the tasks
-const taskReducer = (state: ITasks[], action: TTaskActionContext) => {
+const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
   switch (action.type) {
     case "ADD_TASK":
       // Add the tasks to the array
-      return [...state, action.tasks];
+      return [...state, newTodo(action.payload.taskName)];
+    case "UPDATE_TASK":
+      return state.map((todo) => {
+        if (todo.taskID === action.payload.taskID) {
+          return { ...todo, isComplete: !todo.completed };
+        }
+        return todo;
+      });
     case "DELETE_TASK":
-      return state.filter((item: ITasks) => item.taskID !== action.taskID);
-
+      return state.filter((todo) => todo.taskID !== action.payload.taskID);
     case "RESET_STATE":
       // After logout, empty the array with tasks from context
-      return [...defaultTaskArray];
+      return [];
     default:
-      return { ...state };
+      return state;
   }
 };
 
+const newTodo = (taskName: any): ITasks => {
+  return { taskID: uuid(), taskName: taskName, completed: false};
+};
 
 // Reducer function
 const appReducer = (state: StateInterface, action: TUserAction) => {
@@ -92,7 +89,7 @@ const UserContextProvider = ({ children }: ITaskContextProvider) => {
 const useUserState = () => {
   const context = useContext(UserStateContext);
   if (context === undefined) {
-    throw new Error("useTaskState must be used within TaskContextProvider");
+    throw new Error("useUserState must be used within UserDispatchContext");
   }
   return context;
 };
@@ -101,18 +98,22 @@ const useUserState = () => {
 const useUserDispatch = () => {
   const context = useContext(UserDispatchContext);
   if (context === undefined) {
-    throw new Error("useTaskDispatch must be used within TaskContextProvider");
+    throw new Error("useTaskDispatch must be used within UserDispatchContext");
   }
   return context;
 };
 
-// TODO!:Check
+// context for the task dispatch
+const TaskDispatchContext = React.createContext<
+  taskDispatchContext | undefined
+>(undefined);
+
+// Context for the tasks
+const TodoArrayContext = React.createContext<ITasks[] | undefined>(undefined);
+
+// Function for the task context provider
 const TasksContextProvider = ({ children }: ITaskContextProvider) => {
-  const [taskState, taskDispatch] = useReducer(taskReducer, defaultTaskArray);
-  useEffect(()=>{
-    console.log(taskState);
-    
-  },[taskState])
+  const [taskState, taskDispatch] = useReducer(taskReducer, []);
 
   return (
     <TodoArrayContext.Provider value={taskState}>
