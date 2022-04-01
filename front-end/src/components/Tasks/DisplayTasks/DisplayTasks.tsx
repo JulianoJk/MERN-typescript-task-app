@@ -1,10 +1,4 @@
-import { useEffect } from "react";
-import { submitTasks } from "../../../API/Api";
-import {
-  useTaskDispatch,
-  useTaskState,
-  useUserState,
-} from "../../../context/TaskContext";
+import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import styles from "./DisplayTasks.module.css";
@@ -12,8 +6,6 @@ import styles from "./DisplayTasks.module.css";
 const DisplayTasks: React.FC = () => {
   const taskState = useTaskState();
   const taskDispatch = useTaskDispatch();
-  const { user } = useUserState();
-
 
   // Delete the task
   const handleDelete = (taskID: string) => {

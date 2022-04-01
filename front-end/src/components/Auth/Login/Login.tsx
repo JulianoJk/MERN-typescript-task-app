@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
-import { useUserDispatch } from "../../../context/TaskContext";
+import { useTaskDispatch, useUserDispatch } from "../../../context/TaskContext";
 import { IUserInfoContext, usersDispatchContext } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
-import { loginAPI } from "../../../API/Api";
+import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
 import "../Auth.css";
 
@@ -12,6 +12,8 @@ const Login: React.FC = () => {
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  // After logIn create get request to get (if any) tasks
+  const setTodoDispatch = useTaskDispatch();
   const taskDispatch: usersDispatchContext = useUserDispatch();
 
   // Email handler
@@ -39,6 +41,9 @@ const Login: React.FC = () => {
         };
         taskDispatch({ type: "SET_USER", user: user });
         taskDispatch({ type: "SET_IS_LOGGED_IN", isLoggedIn: true });
+
+        //Get if any tasks from server
+        getTasks(user, setTodoDispatch);
         navigate("/home");
       }
     } catch (error) {

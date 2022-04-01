@@ -1,7 +1,6 @@
-import { ITasks, IUserInfoContext } from "../Model/models";
+import { ITasks, IUserInfoContext, taskDispatchContext } from "../Model/models";
 
 // API call to use when user wants to login
-
 export const loginAPI = async (
   email: string,
   password: string
@@ -66,12 +65,35 @@ export const submitTasks = async (
       "Content-Type": "application/json",
       "x-access-token": `${user.token}`,
     },
-    
+
     body: JSON.stringify({
       // return to the server the tasks object
       todos,
-      user
+      user,
     }),
   });
   console.log("Tasks sended!");
+};
+
+// After login, retrieve (if any) saved tasks from the server
+// get the tasks from the server and push to array
+export const getTasks = async (
+  user: IUserInfoContext,
+  setTodoDispatch: taskDispatchContext
+): Promise<void> => {
+  try {
+    const response = await fetch(`http://localhost:3001/tasks/get/${user.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": `${user.token}`,
+      },
+    });
+    const data: ITasks[] = await response.json();
+    for (let i = 0; i < data.length; i++) {
+      setTodoDispatch({ type: "ADD_TASK", payload: { ...data[i] } });
+    }
+  } catch (error) {
+    console.error(error);
+  }
 };

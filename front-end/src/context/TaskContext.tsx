@@ -8,7 +8,6 @@ import {
   taskDispatchContext,
 } from "../Model/models";
 import { v4 as uuid } from "uuid";
-import DisplayTasks from "../components/Tasks/DisplayTasks/DisplayTasks";
 
 // Default state fot the user context
 const defaultState: StateInterface = {
@@ -48,6 +47,8 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
       });
     case "DELETE_TASK":
       return state.filter((todo) => todo.taskID !== action.payload.taskID);
+    case "GET_TASK":
+      return [...state, action.payload];
     case "RESET_STATE":
       // After logout, empty the array with tasks from context
       return [];
@@ -56,8 +57,9 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
   }
 };
 
-const newTodo = (taskName: any): ITasks => {
-  return { taskID: uuid(), taskName: taskName, completed: false};
+// save new tasks
+const newTodo = (taskName: string): ITasks => {
+  return { taskID: uuid(), taskName: taskName, completed: false };
 };
 
 // Reducer function
@@ -73,7 +75,7 @@ const appReducer = (state: StateInterface, action: TUserAction) => {
       return { ...state };
   }
 };
-
+// Context Provider for the user
 const UserContextProvider = ({ children }: ITaskContextProvider) => {
   const [userState, userDispatch] = useReducer(appReducer, defaultState);
 
@@ -86,7 +88,7 @@ const UserContextProvider = ({ children }: ITaskContextProvider) => {
   );
 };
 // Pass the state of the user
-const useUserState = () => {
+const useUserState = (): StateInterface => {
   const context = useContext(UserStateContext);
   if (context === undefined) {
     throw new Error("useUserState must be used within UserDispatchContext");
@@ -95,7 +97,7 @@ const useUserState = () => {
 };
 
 // Function to use the userDispatch
-const useUserDispatch = () => {
+const useUserDispatch = (): usersDispatchContext => {
   const context = useContext(UserDispatchContext);
   if (context === undefined) {
     throw new Error("useTaskDispatch must be used within UserDispatchContext");

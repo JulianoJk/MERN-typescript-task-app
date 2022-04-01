@@ -6,10 +6,9 @@ const Task = require("../models/task.model");
 router.get("/get/:user_id", auth, async (req, res) => {
   try {
     // Get the user's id
-    const taskId = req.params.user_id;
-
-    // find the task with the same user id
-    const task = await Task.find({ user_id: taskId });
+    const { user_id } = req.params;
+    // find the task by the user+id extracted from the params
+    const task = await Task.find({ user_id: user_id });
     res.json(task);
   } catch (err) {
     return res.status(500).json({ error: err.message });

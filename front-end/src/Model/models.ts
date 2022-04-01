@@ -6,26 +6,28 @@ export interface IUserInfoContext {
   token: string | undefined;
   id: string | undefined;
 }
+// Delete all locally saved tasks
+interface ResetAction {
+  type: "RESET_STATE";
+}
 
 //interface for the context's default state
 export interface StateInterface {
   user: IUserInfoContext;
   isLoggedIn: boolean;
 }
+interface setUserAction {
+  type: "SET_USER";
+  user: IUserInfoContext;
+}
 
+interface setLogInUserAction {
+  type: "SET_IS_LOGGED_IN";
+  isLoggedIn: boolean;
+}
 // Type for the action for the context
-export type TUserAction =
-  | {
-      type: "SET_USER";
-      user: IUserInfoContext;
-    }
-  | {
-      type: "SET_IS_LOGGED_IN";
-      isLoggedIn: boolean;
-    }
-  | {
-      type: "RESET_STATE";
-    };
+
+export type TUserAction = setUserAction | setLogInUserAction | ResetAction;
 
 // Interface for the reducer action to add tasks
 interface AddTodoAction {
@@ -37,13 +39,17 @@ interface ModifyTodoAction {
   type: "UPDATE_TASK" | "DELETE_TASK";
   payload: { taskID: string };
 }
-// Delete all locally saved tasks
-interface ResetTodoAction {
-  type: "RESET_STATE";
+interface GetTodoAction {
+  type: "GET_TASK";
+  payload: ITasks;
 }
 
 // Dispatch reducer for the task
-export type TodoAction = AddTodoAction | ModifyTodoAction | ResetTodoAction;
+export type TodoAction =
+  | AddTodoAction
+  | ModifyTodoAction
+  | ResetAction
+  | GetTodoAction;
 
 // Type for the dispatch reducer user
 export type usersDispatchContext = (action: TUserAction) => void;

@@ -1,17 +1,20 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { submitTasks } from "../../../API/Api";
-import { useTaskDispatch, useTaskState, useUserState } from "../../../context/TaskContext";
+import {
+  useTaskDispatch,
+  useTaskState,
+  useUserState,
+} from "../../../context/TaskContext";
 import { Button } from "../../button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 
 const TaskForm: React.FC = () => {
-  const { user } = useUserState();
-  const taskState = useTaskState();
-  const taskDispatch = useTaskDispatch();
-
-
   // Dispatch reducer for the task
   const setTodoDispatch = useTaskDispatch();
+
+  const { user } = useUserState();
+
+  const taskState = useTaskState();
 
   const [input, setInput] = useState<string>("");
 
@@ -29,35 +32,10 @@ const TaskForm: React.FC = () => {
     }
   };
 
-  // get the tasks from the server and push to array
-  const getTasks = async (): Promise<void> => {
-    try {
-      const response = await fetch(
-        `http://localhost:3001/tasks/get/${user.id}`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "x-access-token": `${user.token}`,
-          },
-        }
-      );
-      const data: any = await response.json();
-      // Push the tasks returned from server to the todoArray
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  // Display tasks every time the taskInfo is change
-  useEffect(() => {
-    getTasks();
-  }, []);
-
   // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
   const handleFormSubmit = (e: React.BaseSyntheticEvent): void => {
     e.preventDefault();
-    submitTasks(user, taskState)  
+    submitTasks(user, taskState);
     setInput("");
   };
 
