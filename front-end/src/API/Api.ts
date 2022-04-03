@@ -91,7 +91,7 @@ export const getTasks = async (
     });
     const data: ITasks[] = await response.json();
     for (let i = 0; i < data.length; i++) {
-      setTodoDispatch({ type: "ADD_TASK", payload: { ...data[i] } });
+      setTodoDispatch({ type: "GET_TASK", payload: { ...data[i] } });
     }
   } catch (error) {
     console.error(error);

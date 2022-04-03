@@ -16,26 +16,33 @@ router.get("/get/:user_id", auth, async (req, res) => {
 });
 
 router.post("/add", auth, async (req, res) => {
-  let task = req.body.todos
-  let user = req.body.user
+  let task = req.body.todos;
+  let user = req.body.user;
 
-  // Array to save all the tasks extracted from the API
-  let saved = [];
-  for (let i = 0; i < task.length; i++) {
-    let newTask = new Task({
-      taskName: task[i]["taskName"],
-      taskID: task[i]["taskID"],
-      user_id: user["id"],
-      completed: task[i]["completed"],
-    })
-    saved.push(await newTask.save())
+  //Check for duplicate taskID coming from the API
+  let idToObj = {};
+  task.forEach((o) => (idToObj[o.taskID] = o));
+  let uniqueArray = Object.values(idToObj);
+  // Check and save each task
+  for (let i = 0; i < uniqueArray.length; i++) {
+    // Check for existing tasks in DB(check by the taskID)
+    Task.exists({ taskID: uniqueArray[i]["taskID"] }, function (err, exists) {
+      if (err) {
+        return res.status(500).json({ err: err });
+        // if exists is null (meaning there is no match), save tasks and the uniqueArray has at least a task
+      } else if (exists === null && uniqueArray.length >= 1) {
+        let newTask = new Task({
+          taskName: uniqueArray[i]["taskName"],
+          taskID: uniqueArray[i]["taskID"],
+          user_id: user["id"],
+          completed: uniqueArray[i]["completed"],
+        });
+        newTask.save();
+      }
+    });
   }
-
-  res.json(saved)
-
-
-})
-
+  res.json("Completed");
+});
 
 router.delete("/delete", auth, async (req, res) => {
   try {
