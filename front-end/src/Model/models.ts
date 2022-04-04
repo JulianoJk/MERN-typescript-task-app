@@ -37,7 +37,7 @@ interface AddTodoAction {
 // Interface for the reducer action to update and delete
 interface ModifyTodoAction {
   type: "UPDATE_TASK" | "DELETE_TASK";
-  payload: { taskID: string };
+  payload: { completed?: boolean; taskID: string };
 }
 interface GetTodoAction {
   type: "GET_TASK";

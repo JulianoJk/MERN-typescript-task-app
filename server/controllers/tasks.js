@@ -46,12 +46,17 @@ router.post("/add", auth, async (req, res) => {
 
 router.delete("/delete", auth, async (req, res) => {
   try {
-    const { _id } = req.body;
-    if (!_id) return res.status(400).json({ message: "No Task id detected." });
+    const id = req.body.taskID;
 
-    const deleted = await Task.findByIdAndDelete(_id);
-
-    res.json(deleted);
+    Task.deleteOne({ taskID: id }, function (err) {
+      if (err) {
+        return handleError(err);
+      } else if (!id) {
+        return res.status(400).json({ message: "No Task id detected." });
+      } else {
+        return res.status(200).json("Deleted!");
+      }
+    });
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }
@@ -60,14 +65,12 @@ router.delete("/delete", auth, async (req, res) => {
 router.put("/update", auth, async (req, res) => {
   try {
     console.log(req.body);
-    const { _id, completed } = req.body;
-    if (!_id) return res.status(400).json({ message: "No Task id detected." });
+    const { taskID, completed } = req.body;
+    if (!taskID)
+      return res.status(400).json({ message: "No Task id detected." });
 
-    const updated = await Task.updateOne(
-      { _id: _id },
-      { completed: completed }
-    );
-    res.json(updated);
+    await Task.findOneAndUpdate({ taskID: taskID }, { completed: completed });
+    res.json("Completed!");
   } catch (e) {
     return res.status(500).json({ error: e.message });
   }

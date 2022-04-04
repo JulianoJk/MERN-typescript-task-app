@@ -9,10 +9,14 @@
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   background-color: #333533;
 }
-.task {
+.default_task {
   margin: 5px;
   color: #e8eddf;
 }
-.checked {
+.checked_task {
   text-decoration: line-through;
+  color: rgb(184, 238, 184);
+}
+.not_checked_item {
+  margin: 3px;
 }

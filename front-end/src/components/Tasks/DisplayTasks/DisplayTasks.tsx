@@ -1,4 +1,9 @@
-import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
+import { deleteTasks, updateTasks } from "../../../API/Api";
+import {
+  useTaskDispatch,
+  useTaskState,
+  useUserState,
+} from "../../../context/TaskContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import styles from "./DisplayTasks.module.css";
@@ -6,33 +11,44 @@ import styles from "./DisplayTasks.module.css";
 const DisplayTasks: React.FC = () => {
   const taskState = useTaskState();
   const taskDispatch = useTaskDispatch();
+  const { user } = useUserState();
 
-  // Delete the task
+  // Delete the task from context and server
   const handleDelete = (taskID: string) => {
+    deleteTasks(user, taskID);
     taskDispatch({
       type: "DELETE_TASK",
       payload: { taskID: taskID },
     });
   };
 
-  const handleToggle = (taskID: string) => {
+  const handleToggle = (taskID: string, completed: boolean) => {
+    updateTasks(user, taskID, completed)
     taskDispatch({
       type: "UPDATE_TASK",
       payload: { taskID: taskID },
     });
   };
 
+  // Return classes based on whether item is checked
+  const checked = (taskCompleted: boolean) => {
+    return taskCompleted ? `${styles.checked_task}` : `${styles.default_task}`;
+  };
+
   return (
     <div>
       {taskState
         .map((todo: ITasks, index: number) => (
-          <div
-            key={index}
-            className={`container flex-column ${styles.task_container}`}
-          >
-            {/* Change complete status of a task */}
-            <input type="checkbox" name="checkbox" id={todo.taskID} />
-            <label htmlFor={todo.taskID} className={`${styles.task}`}>
+          <div key={index} className={`${styles.task_container}`}>
+            {/* Change complete status of a task. If task is completed, keep checked on */}
+            <input
+              type="checkbox"
+              name="checkbox"
+              defaultChecked={todo.completed}
+              id={todo.taskID}
+              onClick={() => handleToggle(todo.taskID, todo.completed)}
+            />
+            <label htmlFor={todo.taskID} className={checked(todo.completed)}>
               {todo.taskName}
             </label>
             {/* Delete a task */}

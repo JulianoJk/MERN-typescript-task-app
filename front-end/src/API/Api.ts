@@ -97,3 +97,45 @@ export const getTasks = async (
     console.error(error);
   }
 };
+
+export const deleteTasks = async (
+  user: IUserInfoContext,
+  taskID: string
+): Promise<void> => {
+  try {
+    await fetch(`http://localhost:3001/tasks/delete`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": `${user.token}`,
+      },
+      body: JSON.stringify({
+        taskID: taskID,
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const updateTasks = async (
+  user: IUserInfoContext,
+  taskID: string,
+  completedStatus: boolean
+): Promise<void> => {
+  try {
+    await fetch(`http://localhost:3001/tasks/update`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": `${user.token}`,
+      },
+      body: JSON.stringify({
+        taskID: taskID,
+        completed: completedStatus,
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

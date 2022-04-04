@@ -27,15 +27,16 @@ const TaskForm: React.FC = () => {
   const handlerTask = (): void => {
     if (input.trim() !== "") {
       setTodoDispatch({ type: "ADD_TASK", payload: { taskName: input } });
-    } else {
-      console.warn("Empty string!");
     }
   };
 
-  // prevent form's default action, then set the input state to empty(after user submits, clear the input field)
+  // Handle submit then send tasks to server
   const handleFormSubmit = (e: React.BaseSyntheticEvent): void => {
     e.preventDefault();
-    submitTasks(user, taskState);
+    if (input.trim() !== "") {
+      submitTasks(user, taskState);
+      console.log(taskState);
+    }
     setInput("");
   };
 
