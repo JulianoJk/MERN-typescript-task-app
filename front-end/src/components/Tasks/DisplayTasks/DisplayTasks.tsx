@@ -23,7 +23,9 @@ const DisplayTasks: React.FC = () => {
   };
 
   const handleToggle = (taskID: string, completed: boolean) => {
-    updateTasks(user, taskID, completed)
+    // pass user, taskID and the opposite of the
+    updateTasks(user, taskID, completed);
+    // Call the update task dispatch and pass the taskID to the context reducer
     taskDispatch({
       type: "UPDATE_TASK",
       payload: { taskID: taskID },
@@ -46,7 +48,8 @@ const DisplayTasks: React.FC = () => {
               name="checkbox"
               defaultChecked={todo.completed}
               id={todo.taskID}
-              onClick={() => handleToggle(todo.taskID, todo.completed)}
+              // Pass the opposite status of the task
+              onClick={() => handleToggle(todo.taskID, !todo.completed)}
             />
             <label htmlFor={todo.taskID} className={checked(todo.completed)}>
               {todo.taskName}

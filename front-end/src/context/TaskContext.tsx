@@ -41,7 +41,7 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
     case "UPDATE_TASK":
       return state.map((todo) => {
         if (todo.taskID === action.payload.taskID) {
-          return { ...todo, isComplete: !todo.completed };
+          return { ...todo, completed: !todo.completed };
         }
         return todo;
       });

@@ -3,7 +3,7 @@
 export interface IUserInfoContext {
   message?: string | undefined;
   username: string | undefined;
-  token: string | undefined;
+   token: string | undefined;
   id: string | undefined;
 }
 // Delete all locally saved tasks
