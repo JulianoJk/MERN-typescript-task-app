@@ -3,14 +3,13 @@
 export interface IUserInfoContext {
   message?: string | undefined;
   username: string | undefined;
-   token: string | undefined;
+  token: string | undefined;
   id: string | undefined;
 }
 // Delete all locally saved tasks
 interface ResetAction {
   type: "RESET_STATE";
 }
-
 //interface for the context's default state
 export interface StateInterface {
   user: IUserInfoContext;
@@ -20,15 +19,12 @@ interface setUserAction {
   type: "SET_USER";
   user: IUserInfoContext;
 }
-
 interface setLogInUserAction {
   type: "SET_IS_LOGGED_IN";
   isLoggedIn: boolean;
 }
 // Type for the action for the context
-
 export type TUserAction = setUserAction | setLogInUserAction | ResetAction;
-
 // Interface for the reducer action to add tasks
 interface AddTodoAction {
   type: "ADD_TASK";
@@ -43,20 +39,16 @@ interface GetTodoAction {
   type: "GET_TASK";
   payload: ITasks;
 }
-
 // Dispatch reducer for the task
 export type TodoAction =
   | AddTodoAction
   | ModifyTodoAction
   | ResetAction
   | GetTodoAction;
-
 // Type for the dispatch reducer user
 export type usersDispatchContext = (action: TUserAction) => void;
-
 // Type for the dispatch reducer task
 export type taskDispatchContext = (action: TodoAction) => void;
-
 // An enum with all the types of actions to use in the registration useReduce
 export enum EActionTypes {
   SET_EMAIL = "SET_EMAIL",
@@ -64,7 +56,6 @@ export enum EActionTypes {
   SET_PASSWORD = "SET_PASSWORD",
   SET_CONFIRM_PASSWORD = "SET_CONFIRM_PASSWORD",
 }
-
 // Interface the the registration
 export interface IAuthCredentials {
   type?: EActionTypes;
@@ -72,8 +63,8 @@ export interface IAuthCredentials {
   username?: string | undefined;
   password?: string | undefined;
   passwordRepeat?: string | undefined;
-}
 
+}
 export interface ITasks {
   taskName: string;
   taskID: string;

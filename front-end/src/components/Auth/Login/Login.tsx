@@ -5,10 +5,14 @@ import { IUserInfoContext, usersDispatchContext } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
+import warning from "../../../images/warning.png";
 import "../Auth.css";
+import ErrorHandler from "../../ErrorHandler/ErrorHandler";
 
 const Login: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
+
+  const [errorMessage, setErrorMessage] = useState<any>();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -29,10 +33,11 @@ const Login: React.FC = () => {
     e.preventDefault();
     try {
       const data = await loginAPI(email, password);
+
       // Check the type of the data is returned, if is string, it contains a message which means error and display error
       // If data is not string, it contains user's information (token, id, email) and the login was successful
       if (typeof data === "string" || data instanceof String) {
-        alert(data);
+        setErrorMessage(data);
       } else if (data) {
         const user: IUserInfoContext = {
           id: data["id"],
@@ -69,6 +74,7 @@ const Login: React.FC = () => {
           onChange={onEmailChange}
           autoComplete="on"
         />
+
         <br />
         <label htmlFor="password" className="control-label text">
           <strong>Password:</strong>
@@ -87,6 +93,11 @@ const Login: React.FC = () => {
           <Button text={"Submit"} />
         </div>
       </form>
+      {/* Display error if there is any */}
+      <div className={ErrorHandler(errorMessage)}>
+        <img src={warning} alt="warning"></img>
+        <strong>{errorMessage}</strong>
+      </div>
     </div>
   );
 };
