@@ -5,14 +5,16 @@ import { IUserInfoContext, usersDispatchContext } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
-import warning from "../../../images/warning.png";
 import "../Auth.css";
 import ErrorHandler from "../../ErrorHandler/ErrorHandler";
+import { Link } from "react-router-dom";
 
 const Login: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
 
-  const [errorMessage, setErrorMessage] = useState<any>();
+  const [errorMessage, setErrorMessage] = useState<
+    string | IUserInfoContext | null | undefined
+  >();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -57,7 +59,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="container flex-column input-container w-50 p-3 border border_style">
+    <div className="container flex-column input-container border ">
       <div>
         <img src={Logo} alt="Logo" className="rounded mx-auto d-block " />
       </div>
@@ -93,10 +95,12 @@ const Login: React.FC = () => {
           <Button text={"Submit"} />
         </div>
       </form>
+      <Link to="/register" className="text flex-wrap link-light">
+        Not a member?
+      </Link>
       {/* Display error if there is any */}
       <div className={ErrorHandler(errorMessage)}>
-        <img src={warning} alt="warning"></img>
-        <strong>{errorMessage}</strong>
+        <strong>{errorMessage}!</strong>
       </div>
     </div>
   );

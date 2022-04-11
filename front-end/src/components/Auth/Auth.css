@@ -1,8 +1,11 @@
-.border_style {
+.border {
+  width: 500px;
   border-width: 2px !important;
   border-radius: 20px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   background-color: rgba(94, 109, 119, 0.21);
+  padding: 10px;
+  margin-top: 10px;
 }
 .title {
   display: flex;
@@ -26,16 +29,4 @@
   background: url("../../images/username-icon.png") no-repeat left;
   background-color: white;
   background-size: 25px;
-}
-
-.alert {
-  margin: 15px auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  height: 30px;
-  line-height: 30px;
-  padding: 0px 15px;
-  width: fit-content;
 }

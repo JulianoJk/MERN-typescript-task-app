@@ -7,6 +7,7 @@ import {
 } from "../../../context/TaskContext";
 import { Button } from "../../button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
+import style from "./TaskForm.module.css";
 
 const TaskForm: React.FC = () => {
   // Dispatch reducer for the task
@@ -26,7 +27,6 @@ const TaskForm: React.FC = () => {
   // set the task's values to return tp server and save tasks
   const handlerTask = (): void => {
     if (input.trim() !== "") {
-      setTodoDispatch({ type: "ADD_TASK", payload: { taskName: input } });
     }
   };
 
@@ -35,13 +35,15 @@ const TaskForm: React.FC = () => {
     e.preventDefault();
     if (input.trim() !== "") {
       submitTasks(user, taskState);
+      setTodoDispatch({ type: "ADD_TASK", payload: { taskName: input } });
+
       console.log(taskState);
     }
     setInput("");
   };
 
   return (
-    <div className="container flex-column input-container w-50 p-3 border">
+    <div className={`container flex-column input-container border ${style.border_style}`}>
       <form onSubmit={handleFormSubmit}>
         <input
           type="text"

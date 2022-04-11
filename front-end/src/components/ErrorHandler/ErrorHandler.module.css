@@ -1,0 +1,16 @@
+.no_error {
+  display: none;
+}
+
+.warningMessage {
+  margin: 15px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  line-height: 40px;
+  padding: 0px 15px;
+  width: fit-content;
+  border-radius: 10px;
+  font-family: Georgia, "Times New Roman", Times, serif;
+}

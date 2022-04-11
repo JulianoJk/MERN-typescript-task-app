@@ -1,4 +1,4 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   EActionTypes,
@@ -10,6 +10,8 @@ import { useUserDispatch } from "../../../context/TaskContext";
 import { Button } from "../../button/Button.component";
 import { registerAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
+import ErrorHandler from "../../ErrorHandler/ErrorHandler";
+
 import "../Auth.css";
 
 // Initial state for the user credentials
@@ -40,6 +42,9 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const [internalState, formDispatch] = useReducer(reducer, initState);
   const taskDispatch: usersDispatchContext = useUserDispatch();
+  const [errorMessage, setErrorMessage] = useState<
+    string | IUserInfoContext | null | undefined
+  >();
 
   // Email handler
   const onEmailChange = (e: React.BaseSyntheticEvent): void => {
@@ -70,10 +75,11 @@ const Register: React.FC = () => {
         `${internalState.password}`,
         `${internalState.passwordRepeat}`
       );
+
       // Check the type of the data is returned, if is string, it contains a message which means error and display error
       // If data is not string, it contains user's information (token, id, email) and the login was successful
       if (typeof data === "string" || data instanceof String) {
-        alert(data);
+        setErrorMessage(data);
       } else if (data) {
         const user: IUserInfoContext = {
           id: data["id"],
@@ -89,7 +95,7 @@ const Register: React.FC = () => {
     }
   };
   return (
-    <div className="container flex-column input-container w-50 p-3 border border_style">
+    <div className="container flex-column input-container border border_style">
       <div>
         <img src={Logo} alt="Logo" className="rounded mx-auto d-block " />
       </div>
@@ -158,6 +164,10 @@ const Register: React.FC = () => {
           <Button text={"Submit"} />
         </div>
       </form>
+      {/* Display error if there is any */}
+      <div className={ErrorHandler(errorMessage)}>
+        <strong>{errorMessage}!</strong>
+      </div>
       <Link to="/login" className="text flex-wrap link-light">
         Already a member?
       </Link>
