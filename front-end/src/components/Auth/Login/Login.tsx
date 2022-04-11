@@ -63,6 +63,7 @@ const Login: React.FC = () => {
       <div>
         <img src={Logo} alt="Logo" className="rounded mx-auto d-block " />
       </div>
+      <h1 className="title">Log-In</h1>
       <form onSubmit={handleInputs}>
         <label htmlFor="email" className="control-label text">
           <strong>Email:</strong>
@@ -95,7 +96,7 @@ const Login: React.FC = () => {
           <Button text={"Submit"} />
         </div>
       </form>
-      <Link to="/register" className="text flex-wrap link-light">
+      <Link to="/register" className=" link flex-wrap link-dark">
         Not a member?
       </Link>
       {/* Display error if there is any */}

@@ -26,7 +26,7 @@ const Navigation: React.FC = () => {
   if (isLoggedIn) {
     return (
       <header>
-        <nav className="navbar navbar-dark bg-dark ">
+        <nav className={`navbar  ${styles.bg}`}>
           <div className="d-flex flex-row-reverse bd-highlight space ms-auto">
             {/* create a responsive btn group */}
             <Link
@@ -52,7 +52,7 @@ const Navigation: React.FC = () => {
   } else {
     return (
       <header>
-        <nav className={`navbar navbar-dark bg-dark ${styles.bg}`}>
+        <nav className={`navbar  ${styles.bg}`}>
           <div className="d-flex flex-row-reverse bd-highlight space ms-auto ">
             {/* create a responsive btn group */}
             <Link

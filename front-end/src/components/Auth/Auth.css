@@ -11,6 +11,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
 }
 .password-icon {
   padding-left: 25px;
@@ -29,4 +31,9 @@
   background: url("../../images/username-icon.png") no-repeat left;
   background-color: white;
   background-size: 25px;
+}
+.link {
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  color: #169882;
 }

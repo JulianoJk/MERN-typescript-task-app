@@ -168,7 +168,7 @@ const Register: React.FC = () => {
       <div className={ErrorHandler(errorMessage)}>
         <strong>{errorMessage}!</strong>
       </div>
-      <Link to="/login" className="text flex-wrap link-light">
+      <Link to="/login" className=" link flex-wrap link-dark">
         Already a member?
       </Link>
     </div>
