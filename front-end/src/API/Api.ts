@@ -139,3 +139,25 @@ export const updateTasks = async (
     console.log(error);
   }
 };
+
+export const editTasks = async (
+  user: IUserInfoContext,
+  taskID: string,
+  editTodo: string | undefined
+): Promise<void> => {
+  try {
+    await fetch(`http://localhost:3001/tasks/edit`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": `${user.token}`,
+      },
+      body: JSON.stringify({
+        taskID: taskID,
+        editTodo: editTodo,
+      }),
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};

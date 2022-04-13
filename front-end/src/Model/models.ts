@@ -32,8 +32,8 @@ interface AddTodoAction {
 }
 // Interface for the reducer action to update and delete
 interface ModifyTodoAction {
-  type: "UPDATE_TASK" | "DELETE_TASK";
-  payload: { completed?: boolean; taskID: string };
+  type: "UPDATE_TASK" | "DELETE_TASK" | "EDIT_TASK";
+  payload: { completed?: boolean; taskID: string | undefined; taskName?: string };
 }
 interface GetTodoAction {
   type: "GET_TASK";
@@ -63,7 +63,6 @@ export interface IAuthCredentials {
   username?: string | undefined;
   password?: string | undefined;
   passwordRepeat?: string | undefined;
-
 }
 export interface ITasks {
   taskName: string;

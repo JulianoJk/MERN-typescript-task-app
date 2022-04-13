@@ -48,7 +48,11 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
     case "DELETE_TASK":
       return state.filter((todo) => todo.taskID !== action.payload.taskID);
     case "GET_TASK":
+      console.log(state);
+
       return [...state, action.payload];
+    case "EDIT_TASK":
+      return { ...state, taskName: action.payload };
     case "RESET_STATE":
       // After logout, empty the array with tasks from context
       return [];

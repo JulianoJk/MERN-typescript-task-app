@@ -26,9 +26,11 @@ const Navigation: React.FC = () => {
   if (isLoggedIn) {
     return (
       <header>
-        <nav className={`navbar  ${styles.bg}`}>
+        <nav className={`navbar-nav mr-auto  ${styles.bg}`}>
           <div className="d-flex flex-row-reverse bd-highlight space ms-auto">
             {/* create a responsive btn group */}
+            <Button text={"logOut"} onClick={logOut} />
+
             <Link
               to="/home"
               className="btn btn-outline-primary text-light text-opacity-75"
@@ -43,16 +45,13 @@ const Navigation: React.FC = () => {
               Profile
             </Link>
           </div>
-          <div className="d-grid gap-2">
-            <Button text={"logOut"} onClick={logOut} />
-          </div>
         </nav>
       </header>
     );
   } else {
     return (
       <header>
-        <nav className={`navbar  ${styles.bg}`}>
+        <nav className={`navbar-nav mr-auto  ${styles.bg}`}>
           <div className="d-flex flex-row-reverse bd-highlight space ms-auto ">
             {/* create a responsive btn group */}
             <Link

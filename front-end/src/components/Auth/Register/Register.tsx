@@ -161,7 +161,7 @@ const Register: React.FC = () => {
         />
         <br />
         <div className="d-grid gap-2">
-          <Button text={"Submit"} />
+          <Button text={"Submit"} className={"btn-block"} />
         </div>
       </form>
       {/* Display error if there is any */}

@@ -75,5 +75,18 @@ router.put("/update", auth, async (req, res) => {
     return res.status(500).json({ error: e.message });
   }
 });
+router.put("/edit", auth, async (req, res) => {
+  try {
+    console.log(req.body);
+    const { taskID, editTodo } = req.body;
+    if (!taskID)
+      return res.status(400).json({ message: "No Task id detected." });
+
+    await Task.findOneAndUpdate({ taskID }, { taskName: editTodo });
+    res.json("Completed!");
+  } catch (e) {
+    return res.status(500).json({ error: e.message });
+  }
+});
 
 module.exports = router;

@@ -92,8 +92,8 @@ const Login: React.FC = () => {
           autoComplete="on"
         />
         <br />
-        <div className="d-grid gap-2">
-          <Button text={"Submit"} />
+        <div className="d-grid gap-2 ">
+          <Button text={"Submit"} className={"btn-block"} />
         </div>
       </form>
       <Link to="/register" className=" link flex-wrap link-dark">

@@ -36,7 +36,6 @@ const TaskForm: React.FC = () => {
     e.preventDefault();
     if (input.trim() !== "") {
       submitTasks(user, taskState);
-
       console.log(taskState);
     }
     setInput("");
@@ -58,7 +57,11 @@ const TaskForm: React.FC = () => {
         />
 
         <div className="d-grid gap-2">
-          <Button onClick={handlerTask} text={"Add task"} />
+          <Button
+            onClick={handlerTask}
+            text={"Add task"}
+            className={"btn-block"}
+          />
         </div>
       </form>
       <DisplayTasks />

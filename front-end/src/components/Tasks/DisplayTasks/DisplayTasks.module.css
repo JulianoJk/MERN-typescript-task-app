@@ -16,6 +16,7 @@
 .checked_task {
   text-decoration: line-through;
   color: rgb(184, 238, 184);
+  margin: 3px;
 }
 .not_checked_item {
   margin: 3px;
