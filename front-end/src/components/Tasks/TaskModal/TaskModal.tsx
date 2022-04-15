@@ -2,16 +2,23 @@ import React, { useState } from "react";
 import { editTasks } from "../../../API/Api";
 import { useTaskDispatch } from "../../../context/TaskContext";
 import { IUserInfoContext } from "../../../Model/models";
+import style from "./TaskModal.module.css";
 
 interface Props {
   user: IUserInfoContext;
   editedTodoID: string | undefined;
+  currentTaskName: string | undefined;
   setModalOpen: (val: React.SetStateAction<boolean>) => void;
 }
-const TaskModal: React.FC<Props> = ({ user, editedTodoID, setModalOpen }) => {
+const TaskModal: React.FC<Props> = ({
+  user,
+  editedTodoID,
+  setModalOpen,
+  currentTaskName,
+}) => {
   const [input, setInput] = useState<string>("");
 
-  const taskDispatch = useTaskDispatch();
+  const editTaskDispatch = useTaskDispatch();
 
   const handleChange = (e: React.BaseSyntheticEvent): void => {
     setInput(e.target.value);
@@ -19,7 +26,6 @@ const TaskModal: React.FC<Props> = ({ user, editedTodoID, setModalOpen }) => {
 
   const handleEdit = (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
-    console.log(input);
     setModalOpen(false);
 
     if (
@@ -29,7 +35,6 @@ const TaskModal: React.FC<Props> = ({ user, editedTodoID, setModalOpen }) => {
     ) {
       // pass user, taskID and the opposite of the
       editTasks(user, editedTodoID, input);
-      console.log(user, input, editedTodoID);
     }
     // Call the update task dispatch and pass the taskID to the context reducer
     // taskDispatch({
@@ -50,7 +55,7 @@ const TaskModal: React.FC<Props> = ({ user, editedTodoID, setModalOpen }) => {
     >
       <div className="modal-dialog" role="document">
         <div className="modal-content">
-          <div className="modal-header">
+          <div className="modal-body">
             <button
               type="button"
               className="close"
@@ -59,12 +64,13 @@ const TaskModal: React.FC<Props> = ({ user, editedTodoID, setModalOpen }) => {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-          </div>
-          <div className="modal-body">
             <form onSubmit={handleEdit}>
               <div className="form-group">
-                <label htmlFor="message-text" className="col-form-label">
-                  New task name:
+                <label
+                  htmlFor="message-text"
+                  className={`col-form-label ${style.task_title}`}
+                >
+                  <strong>{currentTaskName}</strong>
                 </label>
                 <input
                   type="text"
@@ -73,25 +79,25 @@ const TaskModal: React.FC<Props> = ({ user, editedTodoID, setModalOpen }) => {
                   name="task"
                   value={input}
                   onChange={handleChange}
-                  placeholder="Add tasks"
+                  placeholder="Type new todo name"
                   autoComplete="on"
                 />
               </div>
               <div className="modal-footer">
                 <button
                   type="button"
-                  className="btn btn-secondary"
+                  className="btn btn-danger"
                   data-dismiss="modal"
                 >
                   Close
                 </button>
                 <button
                   type="button"
-                  className="btn btn-primary"
+                  className="btn btn-success"
                   onClick={handleEdit}
                   data-dismiss="modal"
                 >
-                  Send message
+                  Save changes
                 </button>
               </div>
             </form>

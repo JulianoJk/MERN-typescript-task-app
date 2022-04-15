@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { deleteTasks, editTasks, updateTasks } from "../../../API/Api";
+import { deleteTasks, updateTasks } from "../../../API/Api";
 import {
   useTaskDispatch,
   useTaskState,
@@ -18,6 +18,8 @@ const DisplayTasks: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   const [editedTodoID, setEditedTodoID] = useState<string | undefined>();
+
+  const [currentTaskName, setCurrentTaskName] = useState<string | undefined>();
 
   // Delete the task from context and server
   const handleDelete = (taskID: string) => {
@@ -63,14 +65,13 @@ const DisplayTasks: React.FC = () => {
             {/* Edit task */}
             <button
               type="button"
-              className="btn btn-success"
+              className="btn btn-primary"
               data-toggle="modal"
               data-target="#editTasks"
               onClick={() => {
-                // setEditedTodoID(todo.taskID)
-                console.log(todo.taskID);
                 setModalOpen(true);
                 setEditedTodoID(todo.taskID);
+                setCurrentTaskName(todo.taskName);
               }}
             >
               Edit
@@ -79,7 +80,7 @@ const DisplayTasks: React.FC = () => {
             <Button
               text={"Delete"}
               onClick={() => handleDelete(todo.taskID)}
-              className={"btn btn-danger"}
+              className={`btn btn-danger ${styles.btn}`}
             />
           </div>
         ))
@@ -87,6 +88,7 @@ const DisplayTasks: React.FC = () => {
       {modalOpen && (
         <TaskModal
           user={user}
+          currentTaskName={currentTaskName}
           editedTodoID={editedTodoID}
           setModalOpen={setModalOpen}
         />

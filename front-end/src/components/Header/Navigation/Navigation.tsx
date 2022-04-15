@@ -29,11 +29,15 @@ const Navigation: React.FC = () => {
         <nav className={`navbar-nav mr-auto  ${styles.bg}`}>
           <div className="d-flex flex-row-reverse bd-highlight space ms-auto">
             {/* create a responsive btn group */}
-            <Button text={"logOut"} onClick={logOut} />
+            <Button
+              text={"logOut"}
+              onClick={logOut}
+              className={`${styles.btn}`}
+            />
 
             <Link
               to="/home"
-              className="btn btn-outline-primary text-light text-opacity-75"
+              className={`btn btn-outline-primary text-light text-opacity-75 ${styles.btn}`}
             >
               Home
             </Link>

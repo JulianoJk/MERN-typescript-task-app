@@ -64,7 +64,6 @@ router.delete("/delete", auth, async (req, res) => {
 
 router.put("/update", auth, async (req, res) => {
   try {
-    console.log(req.body);
     const { taskID, completed } = req.body;
     if (!taskID)
       return res.status(400).json({ message: "No Task id detected." });
@@ -77,7 +76,6 @@ router.put("/update", auth, async (req, res) => {
 });
 router.put("/edit", auth, async (req, res) => {
   try {
-    console.log(req.body);
     const { taskID, editTodo } = req.body;
     if (!taskID)
       return res.status(400).json({ message: "No Task id detected." });

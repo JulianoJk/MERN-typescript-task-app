@@ -36,7 +36,6 @@ const TaskForm: React.FC = () => {
     e.preventDefault();
     if (input.trim() !== "") {
       submitTasks(user, taskState);
-      console.log(taskState);
     }
     setInput("");
   };
