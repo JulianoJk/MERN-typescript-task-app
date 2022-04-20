@@ -5,14 +5,14 @@ require("dotenv").config()
 const auth = (req, res, next) => {
     const token = req.headers["x-access-token"]
     if(!token) {
-        return res.status(400).json("Not authenticated")
+        return res.status(401).json("Not authenticated")
     }
     try {
         const tokenData = jwt.verify(token, process.env.JWT_KEY)
         next()
     }
     catch(ex) {
-        return res.status(400).json("Invalid token")
+        return res.status(412).json("Invalid token")
     }
 }
 

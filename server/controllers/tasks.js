@@ -9,9 +9,9 @@ router.get("/get/:user_id", auth, async (req, res) => {
     const { user_id } = req.params;
     // find the task by the user+id extracted from the params
     const task = await Task.find({ user_id: user_id });
-    res.json(task);
+    res.status(202).json(task);
   } catch (err) {
-    return res.status(500).json({ error: err.message });
+    return res.status(401).json({ error: err.message });
   }
 });
 
@@ -19,29 +19,17 @@ router.post("/add", auth, async (req, res) => {
   let task = req.body.todos;
   let user = req.body.user;
 
-  //Check for duplicate taskID coming from the API
-  let idToObj = {};
-  task.forEach((o) => (idToObj[o.taskID] = o));
-  let uniqueArray = Object.values(idToObj);
-  // Check and save each task
-  for (let i = 0; i < uniqueArray.length; i++) {
-    // Check for existing tasks in DB(check by the taskID)
-    Task.exists({ taskID: uniqueArray[i]["taskID"] }, function (err, exists) {
-      if (err) {
-        return res.status(500).json({ err: err });
-        // if exists is null (meaning there is no match), save tasks and the uniqueArray has at least a task
-      } else if (exists === null && uniqueArray.length >= 1) {
-        let newTask = new Task({
-          taskName: uniqueArray[i]["taskName"],
-          taskID: uniqueArray[i]["taskID"],
-          user_id: user["id"],
-          completed: uniqueArray[i]["completed"],
-        });
-        newTask.save();
-      }
+  try {
+    let newTask = new Task({
+      taskName: task["taskName"],
+      user_id: user["id"],
+      completed: task["completed"],
     });
+    let saved = await newTask.save();
+    res.json(saved);
+  } catch (err) {
+    return res.status(400).json({ error: err.message });
   }
-  res.json("Completed");
 });
 
 router.delete("/delete", auth, async (req, res) => {
@@ -52,13 +40,13 @@ router.delete("/delete", auth, async (req, res) => {
       if (err) {
         return handleError(err);
       } else if (!id) {
-        return res.status(400).json({ message: "No Task id detected." });
+        return res.status(404).json({ message: "No Task id detected." });
       } else {
-        return res.status(200).json("Deleted!");
+        return res.status(202).json("Deleted!");
       }
     });
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    return res.status(400).json({ error: e.message });
   }
 });
 
@@ -66,24 +54,24 @@ router.put("/update", auth, async (req, res) => {
   try {
     const { taskID, completed } = req.body;
     if (!taskID)
-      return res.status(400).json({ message: "No Task id detected." });
+      return res.status(404).json({ message: "No Task id detected." });
 
     await Task.findOneAndUpdate({ taskID: taskID }, { completed: completed });
-    res.json("Completed!");
+    res.status(201).json("Completed!");
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    return res.status(400).json({ error: e.message });
   }
 });
 router.put("/edit", auth, async (req, res) => {
   try {
     const { taskID, editTodo } = req.body;
     if (!taskID)
-      return res.status(400).json({ message: "No Task id detected." });
+      return res.status(404).json({ message: "No Task id detected." });
 
     await Task.findOneAndUpdate({ taskID }, { taskName: editTodo });
-    res.json("Completed!");
+    res.status(201).json("Completed!");
   } catch (e) {
-    return res.status(500).json({ error: e.message });
+    return res.status(400).json({ error: e.message });
   }
 });
 
