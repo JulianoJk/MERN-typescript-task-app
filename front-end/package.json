@@ -43,7 +43,7 @@
     ]
   },
   "devDependencies": {
-    "@types/react": "^17.0.43",
+    "@types/react": "^17.0.44",
     "@types/react-router": "^3.0.28",
     "@types/uuid": "^8.3.4"
   }

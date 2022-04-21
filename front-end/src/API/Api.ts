@@ -4,7 +4,7 @@ import { ITasks, IUserInfoContext, taskDispatchContext } from "../Model/models";
 export const loginAPI = async (
   email: string,
   password: string
-): Promise<IUserInfoContext | string | null | undefined> => {
+): Promise<IUserInfoContext | string | undefined> => {
   try {
     const response = await fetch("http://localhost:3001/users/login", {
       method: "POST",
@@ -21,7 +21,7 @@ export const loginAPI = async (
       return data.message;
     }
   } catch (error) {
-    return null;
+    return;
   }
 };
 
@@ -57,22 +57,32 @@ export const registerAPI = async (
 // Return tasks to server
 export const submitTasks = async (
   user: IUserInfoContext,
-  todos: ITasks[]
-): Promise<void> => {
-  await fetch(`http://localhost:3001/tasks/add`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-access-token": `${user.token}`,
-    },
+  taskName: string
+): Promise<ITasks | string | undefined> => {
+  try {
+    const response = await fetch(`http://localhost:3001/tasks/add`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-access-token": `${user.token}`,
+      },
 
-    body: JSON.stringify({
-      // return to the server the tasks object
-      todos,
-      user,
-    }),
-  });
-  console.log("Tasks sended!");
+      body: JSON.stringify({
+        // return to the server the tasks object
+        taskName,
+        user,
+      }),
+    });
+    console.log("Tasks sended!");
+    const data: ITasks = await response.json();
+    if (response.ok) {
+      return data;
+    } else {
+      return data.error;
+    }
+  } catch (error) {
+    return;
+  }
 };
 
 // After login, retrieve (if any) saved tasks from the server

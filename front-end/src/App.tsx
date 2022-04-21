@@ -6,10 +6,10 @@ import Profile from "./components/Pages/Profile/Profile";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import Navigation from "./components/Header/Navigation/Navigation";
 import {
-  TasksContextProvider,
-  UserContextProvider,
+  TasksContextProvider
 } from "./context/TaskContext";
 import "./App.css";
+import { UserContextProvider } from "./context/UserContext";
 
 const App = () => {
   return (

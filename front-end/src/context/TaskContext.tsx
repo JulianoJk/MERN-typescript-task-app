@@ -1,52 +1,45 @@
 import React, { useContext, useReducer } from "react";
 import {
-  usersDispatchContext,
   TodoAction,
   ITasks,
-  StateInterface,
-  TUserAction,
   taskDispatchContext,
+  IChildrenProvider,
 } from "../Model/models";
-import { v4 as uuid } from "uuid";
 
-// Default state fot the user context
-const defaultState: StateInterface = {
-  user: {
-    username: undefined,
-    token: undefined,
-    id: undefined,
+const defaultTaskState: Array<ITasks> = [
+  {
+    taskName: undefined,
+    _id: undefined,
+    completed: undefined,
   },
-  isLoggedIn: false,
-};
-
-// Interface for the TaskContextProvider children
-interface ITaskContextProvider {
-  children: React.ReactNode;
-}
-
-const UserStateContext = React.createContext<StateInterface | undefined>(
-  undefined
-);
-UserStateContext.displayName = "UserStateContext";
-const UserDispatchContext = React.createContext<
-  usersDispatchContext | undefined
->(undefined);
+];
 
 // Reducer function for the tasks
 const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
   switch (action.type) {
     case "ADD_TASK":
+      // save new tasks
+      const newTodo = (
+        taskName: string | undefined,
+        _id: string | undefined,
+        completed: boolean | undefined
+      ): ITasks => {
+        return { taskName: taskName, _id: _id, completed: completed };
+      };
       // Add the tasks to the array
-      return [...state, newTodo(action.payload.taskName)];
+      return [
+        ...state,
+        newTodo(action.payload.taskName, action.payload._id, action.payload.completed),
+      ];
     case "UPDATE_TASK":
       return state.map((todo) => {
-        if (todo.taskID === action.payload.taskID) {
+        if (todo._id === action.payload._id) {
           return { ...todo, completed: !todo.completed };
         }
         return todo;
       });
     case "DELETE_TASK":
-      return state.filter((todo) => todo.taskID !== action.payload.taskID);
+      return state.filter((todo) => todo._id !== action.payload._id);
     case "GET_TASK":
       console.log(state);
 
@@ -61,54 +54,6 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
   }
 };
 
-// save new tasks
-const newTodo = (taskName: string): ITasks => {
-  return { taskID: uuid(), taskName: taskName, completed: false };
-};
-
-// Reducer function
-const appReducer = (state: StateInterface, action: TUserAction) => {
-  switch (action.type) {
-    case "SET_USER":
-      return { ...state, user: action.user };
-    case "SET_IS_LOGGED_IN":
-      return { ...state, isLoggedIn: action.isLoggedIn };
-    case "RESET_STATE":
-      return { ...defaultState };
-    default:
-      return { ...state };
-  }
-};
-// Context Provider for the user
-const UserContextProvider = ({ children }: ITaskContextProvider) => {
-  const [userState, userDispatch] = useReducer(appReducer, defaultState);
-
-  return (
-    <UserStateContext.Provider value={userState}>
-      <UserDispatchContext.Provider value={userDispatch}>
-        {children}
-      </UserDispatchContext.Provider>
-    </UserStateContext.Provider>
-  );
-};
-// Pass the state of the user
-const useUserState = (): StateInterface => {
-  const context = useContext(UserStateContext);
-  if (context === undefined) {
-    throw new Error("useUserState must be used within UserDispatchContext");
-  }
-  return context;
-};
-
-// Function to use the userDispatch
-const useUserDispatch = (): usersDispatchContext => {
-  const context = useContext(UserDispatchContext);
-  if (context === undefined) {
-    throw new Error("useTaskDispatch must be used within UserDispatchContext");
-  }
-  return context;
-};
-
 // context for the task dispatch
 const TaskDispatchContext = React.createContext<
   taskDispatchContext | undefined
@@ -118,8 +63,8 @@ const TaskDispatchContext = React.createContext<
 const TodoArrayContext = React.createContext<ITasks[] | undefined>(undefined);
 
 // Function for the task context provider
-const TasksContextProvider = ({ children }: ITaskContextProvider) => {
-  const [taskState, taskDispatch] = useReducer(taskReducer, []);
+const TasksContextProvider = ({ children }: IChildrenProvider) => {
+  const [taskState, taskDispatch] = useReducer(taskReducer, defaultTaskState);
 
   return (
     <TodoArrayContext.Provider value={taskState}>
@@ -148,11 +93,4 @@ const useTaskDispatch = () => {
   return context;
 };
 
-export {
-  UserContextProvider,
-  useUserState,
-  useUserDispatch,
-  TasksContextProvider,
-  useTaskState,
-  useTaskDispatch,
-};
+export { TasksContextProvider, useTaskState, useTaskDispatch };

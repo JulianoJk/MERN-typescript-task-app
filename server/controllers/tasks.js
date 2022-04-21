@@ -16,17 +16,17 @@ router.get("/get/:user_id", auth, async (req, res) => {
 });
 
 router.post("/add", auth, async (req, res) => {
-  let task = req.body.todos;
+  let {taskName} = req.body;
   let user = req.body.user;
 
   try {
     let newTask = new Task({
-      taskName: task["taskName"],
+      taskName: taskName,
       user_id: user["id"],
-      completed: task["completed"],
+      completed: false,
     });
     let saved = await newTask.save();
-    res.json(saved);
+    res.status(201).json(saved);
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }

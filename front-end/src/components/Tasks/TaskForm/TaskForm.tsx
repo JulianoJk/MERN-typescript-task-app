@@ -1,19 +1,18 @@
 import { useState } from "react";
 import { submitTasks } from "../../../API/Api";
-import {
-  useTaskDispatch,
-  useTaskState,
-  useUserState,
-} from "../../../context/TaskContext";
+import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
+import { useUserState } from "../../../context/UserContext";
+import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 import style from "./TaskForm.module.css";
 
 const TaskForm: React.FC = () => {
   // Dispatch reducer for the task
-  const setTodoDispatch = useTaskDispatch();
 
   const { user } = useUserState();
+
+  const setTodoDispatch = useTaskDispatch();
 
   const taskState = useTaskState();
 
@@ -25,19 +24,27 @@ const TaskForm: React.FC = () => {
   };
 
   // set the task's values to return tp server and save tasks
-  const handlerTask = (): void => {
-    if (input.trim() !== "") {
-      setTodoDispatch({ type: "ADD_TASK", payload: { taskName: input } });
-    }
-  };
 
   // Handle submit then send tasks to server
-  const handleFormSubmit = (e: React.BaseSyntheticEvent): void => {
+  const handleFormSubmit = async (
+    e: React.BaseSyntheticEvent
+  ): Promise<void> => {
     e.preventDefault();
     if (input.trim() !== "") {
-      submitTasks(user, taskState);
+      const data: string | ITasks | undefined = await submitTasks(user, input);
+      if (typeof data === "string" || data instanceof String) {
+        return;
+      } else if (data) {
+        let taskResponse: ITasks = {
+          taskName: data["taskName"],
+          _id: data["_id"],
+          completed: data["completed"],
+        };
+        setTodoDispatch({ type: "ADD_TASK", payload: taskResponse });
+      }
+
+      setInput("");
     }
-    setInput("");
   };
 
   return (
@@ -56,14 +63,10 @@ const TaskForm: React.FC = () => {
         />
 
         <div className="d-grid gap-2">
-          <Button
-            onClick={handlerTask}
-            text={"Add task"}
-            className={"btn-block"}
-          />
+          <Button text={"Add task"} className={"btn-block"} />
         </div>
       </form>
-      <DisplayTasks />
+      {/* <DisplayTasks /> */}
     </div>
   );
 };

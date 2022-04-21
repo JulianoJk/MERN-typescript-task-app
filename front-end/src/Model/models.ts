@@ -25,26 +25,30 @@ interface setLogInUserAction {
 }
 // Type for the action for the context
 export type TUserAction = setUserAction | setLogInUserAction | ResetAction;
-// Interface for the reducer action to add tasks
-interface AddTodoAction {
-  type: "ADD_TASK";
-  payload: { taskName: string };
-}
-// Interface for the reducer action to update and delete
-interface ModifyTodoAction {
-  type: "UPDATE_TASK" | "DELETE_TASK" | "EDIT_TASK";
-  payload: { completed?: boolean; taskID: string | undefined; taskName?: string };
-}
-interface GetTodoAction {
-  type: "GET_TASK";
-  payload: ITasks;
-}
+
 // Dispatch reducer for the task
 export type TodoAction =
-  | AddTodoAction
-  | ModifyTodoAction
+  | {
+      type: "ADD_TASK";
+      payload: {
+        taskName: string | undefined;
+        _id: string | undefined;
+        completed: boolean | undefined;
+      };
+    }
+  | {
+      type: "UPDATE_TASK" | "DELETE_TASK" | "EDIT_TASK";
+      payload: {
+        completed?: boolean;
+        _id: string | undefined;
+        taskName?: string;
+      };
+    }
   | ResetAction
-  | GetTodoAction;
+  | {
+      type: "GET_TASK";
+      payload: ITasks;
+    };
 // Type for the dispatch reducer user
 export type usersDispatchContext = (action: TUserAction) => void;
 // Type for the dispatch reducer task
@@ -65,7 +69,13 @@ export interface IAuthCredentials {
   passwordRepeat?: string | undefined;
 }
 export interface ITasks {
-  taskName: string;
-  taskID: string;
-  completed: boolean;
+  error?: string
+  taskName: string | undefined ;
+  _id: string | undefined ;
+  completed: boolean | undefined;
+}
+
+// Interface for the TaskContextProvider children
+export interface IChildrenProvider {
+  children: React.ReactNode;
 }

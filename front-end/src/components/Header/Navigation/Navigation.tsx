@@ -1,10 +1,9 @@
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import {
-  useTaskDispatch,
-  useUserDispatch,
-  useUserState,
+  useTaskDispatch
 } from "../../../context/TaskContext";
+import { useUserDispatch, useUserState } from "../../../context/UserContext";
 import { Button } from "../../button/Button.component";
 import styles from "./Navigation.module.css";
 

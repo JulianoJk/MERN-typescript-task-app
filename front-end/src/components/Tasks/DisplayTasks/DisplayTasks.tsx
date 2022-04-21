@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { deleteTasks, updateTasks } from "../../../API/Api";
-import {
-  useTaskDispatch,
-  useTaskState,
-  useUserState,
-} from "../../../context/TaskContext";
+import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
+import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
 import { Button } from "../../button/Button.component";
 import TaskModal from "../TaskModal/TaskModal";
@@ -22,22 +19,22 @@ const DisplayTasks: React.FC = () => {
   const [currentTaskName, setCurrentTaskName] = useState<string | undefined>();
 
   // Delete the task from context and server
-  const handleDelete = (taskID: string) => {
-    deleteTasks(user, taskID);
-    taskDispatch({
-      type: "DELETE_TASK",
-      payload: { taskID: taskID },
-    });
-  };
+  // const handleDelete = (taskID: string) => {
+  //   deleteTasks(user, taskID);
+  //   taskDispatch({
+  //     type: "DELETE_TASK",
+  //     payload: { taskID: taskID },
+  //   });
+  // };
 
   const handleUpdate = (taskID: string, completed: boolean) => {
     // pass user, taskID and the opposite of the
     updateTasks(user, taskID, completed);
     // Call the update task dispatch and pass the taskID to the context reducer
-    taskDispatch({
-      type: "UPDATE_TASK",
-      payload: { taskID: taskID },
-    });
+    // taskDispatch({
+      // type: "UPDATE_TASK",
+      // payload: { taskID: taskID },
+    // });
   };
 
   // Return classes based on whether item is checked
@@ -54,14 +51,14 @@ const DisplayTasks: React.FC = () => {
             <input
               type="checkbox"
               name="checkbox"
-              defaultChecked={todo.completed}
-              id={todo.taskID}
+              // defaultChecked={todo.completed}
+              // id={todo._id}
               // Pass the opposite status of the task
-              onClick={() => handleUpdate(todo.taskID, !todo.completed)}
+              // onClick={() => handleUpdate(todo.taskID, !todo.completed)}
             />
-            <label htmlFor={todo.taskID} className={checked(todo.completed)}>
+            {/* <label htmlFor={todo.taskID} className={checked(todo.completed)}>
               {todo.taskName}
-            </label>
+            </label> */}
             {/* Edit task */}
             <button
               type="button"
@@ -70,8 +67,8 @@ const DisplayTasks: React.FC = () => {
               data-target="#editTasks"
               onClick={() => {
                 setModalOpen(true);
-                setEditedTodoID(todo.taskID);
-                setCurrentTaskName(todo.taskName);
+                // setEditedTodoID(todo._id);
+                // setCurrentTaskName(todo.taskName);
               }}
             >
               Edit
@@ -79,7 +76,7 @@ const DisplayTasks: React.FC = () => {
             {/* Delete a task */}
             <Button
               text={"Delete"}
-              onClick={() => handleDelete(todo.taskID)}
+              // onClick={() => handleDelete(todo.taskID)}
               className={`btn btn-danger ${styles.btn}`}
             />
           </div>
