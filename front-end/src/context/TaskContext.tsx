@@ -29,7 +29,11 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
       // Add the tasks to the array
       return [
         ...state,
-        newTodo(action.payload.taskName, action.payload._id, action.payload.completed),
+        newTodo(
+          action.payload.taskName,
+          action.payload._id,
+          action.payload.completed
+        ),
       ];
     case "UPDATE_TASK":
       return state.map((todo) => {
@@ -45,7 +49,13 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
 
       return [...state, action.payload];
     case "EDIT_TASK":
-      return { ...state, taskName: action.payload };
+      // map all the tasks, when ids match, change the taskName with the new taskName
+      return state.map((todo) => {
+        if (todo._id === action.payload._id) {
+          return { ...todo, taskName: action.payload.taskName };
+        }
+        return todo;
+      });
     case "RESET_STATE":
       // After logout, empty the array with tasks from context
       return [];

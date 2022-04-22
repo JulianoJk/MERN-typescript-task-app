@@ -16,17 +16,21 @@ router.get("/get/:user_id", auth, async (req, res) => {
 });
 
 router.post("/add", auth, async (req, res) => {
-  let {taskName} = req.body;
+  let { taskName } = req.body;
   let user = req.body.user;
 
   try {
-    let newTask = new Task({
-      taskName: taskName,
-      user_id: user["id"],
-      completed: false,
-    });
-    let saved = await newTask.save();
-    res.status(201).json(saved);
+    if (taskName !== undefined || taskName !== null) {
+      let newTask = new Task({
+        taskName: taskName,
+        user_id: user["id"],
+        completed: false,
+      });
+      let saved = await newTask.save();
+      res.status(201).json(saved);
+    } else {
+      return;
+    }
   } catch (err) {
     return res.status(400).json({ error: err.message });
   }
@@ -36,7 +40,7 @@ router.delete("/delete", auth, async (req, res) => {
   try {
     const id = req.body.taskID;
 
-    Task.deleteOne({ taskID: id }, function (err) {
+    Task.findByIdAndDelete({ _id: id }, function (err) {
       if (err) {
         return handleError(err);
       } else if (!id) {
@@ -56,7 +60,7 @@ router.put("/update", auth, async (req, res) => {
     if (!taskID)
       return res.status(404).json({ message: "No Task id detected." });
 
-    await Task.findOneAndUpdate({ taskID: taskID }, { completed: completed });
+    await Task.findByIdAndUpdate({ _id: taskID }, { completed: completed });
     res.status(201).json("Completed!");
   } catch (e) {
     return res.status(400).json({ error: e.message });
@@ -64,12 +68,12 @@ router.put("/update", auth, async (req, res) => {
 });
 router.put("/edit", auth, async (req, res) => {
   try {
-    const { taskID, editTodo } = req.body;
-    if (!taskID)
-      return res.status(404).json({ message: "No Task id detected." });
+    const { _id, editTodo } = req.body;
+    console.log();
+    if (!_id) return res.status(404).json({ message: "No Task id detected." });
 
-    await Task.findOneAndUpdate({ taskID }, { taskName: editTodo });
-    res.status(201).json("Completed!");
+    await Task.findOneAndUpdate({ _id }, { taskName: editTodo });
+    res.status(201).json("changed successfully!");
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }

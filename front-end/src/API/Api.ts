@@ -110,7 +110,7 @@ export const getTasks = async (
 
 export const deleteTasks = async (
   user: IUserInfoContext,
-  taskID: string
+  taskID: string | undefined
 ): Promise<void> => {
   try {
     await fetch(`http://localhost:3001/tasks/delete`, {
@@ -130,8 +130,8 @@ export const deleteTasks = async (
 
 export const updateTasks = async (
   user: IUserInfoContext,
-  taskID: string,
-  completedStatus: boolean
+  taskID: string | undefined,
+  completedStatus: boolean | undefined
 ): Promise<void> => {
   try {
     await fetch(`http://localhost:3001/tasks/update`, {
@@ -152,21 +152,28 @@ export const updateTasks = async (
 
 export const editTasks = async (
   user: IUserInfoContext,
-  taskID: string,
+  _id: string,
   editTodo: string | undefined
-): Promise<void> => {
+): Promise<ITasks | string | undefined> => {
   try {
-    await fetch(`http://localhost:3001/tasks/edit`, {
+    const response = await fetch(`http://localhost:3001/tasks/edit`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "x-access-token": `${user.token}`,
       },
       body: JSON.stringify({
-        taskID: taskID,
+        _id: _id,
         editTodo: editTodo,
       }),
     });
+    const data: ITasks = await response.json();
+    console.log(data);
+    if (response.ok) {
+      return data;
+    } else {
+      return;
+    }
   } catch (error) {
     console.log(error);
   }

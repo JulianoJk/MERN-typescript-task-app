@@ -1,21 +1,17 @@
 import React, { useState } from "react";
 import { editTasks } from "../../../API/Api";
 import { useTaskDispatch } from "../../../context/TaskContext";
-import { IUserInfoContext } from "../../../Model/models";
+import { useUserState } from "../../../context/UserContext";
+import { ITasks } from "../../../Model/models";
 import style from "./TaskModal.module.css";
 
 interface Props {
-  user: IUserInfoContext;
-  editedTodoID: string | undefined;
-  currentTaskName: string | undefined;
+  editedTodo: ITasks | undefined;
   setModalOpen: (val: React.SetStateAction<boolean>) => void;
 }
-const TaskModal: React.FC<Props> = ({
-  user,
-  editedTodoID,
-  setModalOpen,
-  currentTaskName,
-}) => {
+const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
+  const { user } = useUserState();
+
   const [input, setInput] = useState<string>("");
 
   const editTaskDispatch = useTaskDispatch();
@@ -24,23 +20,29 @@ const TaskModal: React.FC<Props> = ({
     setInput(e.target.value);
   };
 
-  const handleEdit = (e: React.BaseSyntheticEvent) => {
+  const handleEdit = async (
+    e: React.BaseSyntheticEvent
+  ): Promise<null | undefined> => {
     e.preventDefault();
     setModalOpen(false);
-
     if (
       input !== undefined &&
       input.trim() !== "" &&
-      editedTodoID !== undefined
+      editedTodo?._id !== undefined
     ) {
       // pass user, taskID and the opposite of the
-      editTasks(user, editedTodoID, input);
+      const data = await editTasks(user, editedTodo._id, input);
+      if (data === "changed successfully!") {
+        // Call the update task dispatch and pass the taskID to the context reducer
+        editTaskDispatch({
+          type: "EDIT_TASK",
+          payload: { _id: editedTodo._id, taskName: input },
+        });
+      } else {
+        return null;
+      }
     }
-    // Call the update task dispatch and pass the taskID to the context reducer
-    // taskDispatch({
-    //   type: "EDIT_TASK",
-    //   payload: { taskID: editedTodoID, taskName: input },
-    // });
+
     setInput("");
   };
   return (
@@ -70,7 +72,7 @@ const TaskModal: React.FC<Props> = ({
                   htmlFor="message-text"
                   className={`col-form-label ${style.task_title}`}
                 >
-                  <strong>{currentTaskName}</strong>
+                  <strong>{editedTodo?.taskName}</strong>
                 </label>
                 <input
                   type="text"

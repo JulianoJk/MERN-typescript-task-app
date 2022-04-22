@@ -66,7 +66,7 @@ const TaskForm: React.FC = () => {
           <Button text={"Add task"} className={"btn-block"} />
         </div>
       </form>
-      {/* <DisplayTasks /> */}
+      <DisplayTasks />
     </div>
   );
 };
