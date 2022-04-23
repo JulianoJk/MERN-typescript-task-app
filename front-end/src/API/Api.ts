@@ -152,7 +152,7 @@ export const updateTasks = async (
 
 export const editTasks = async (
   user: IUserInfoContext,
-  _id: string,
+  taskID: string,
   editTodo: string | undefined
 ): Promise<ITasks | string | undefined> => {
   try {
@@ -163,16 +163,15 @@ export const editTasks = async (
         "x-access-token": `${user.token}`,
       },
       body: JSON.stringify({
-        _id: _id,
+        _id: taskID,
         editTodo: editTodo,
       }),
     });
     const data: ITasks = await response.json();
-    console.log(data);
     if (response.ok) {
       return data;
     } else {
-      return;
+      return data.error;
     }
   } catch (error) {
     console.log(error);

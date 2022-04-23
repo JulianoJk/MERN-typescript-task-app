@@ -17,25 +17,25 @@ const DisplayTasks: React.FC = () => {
   const [editedTodo, setEditedTodo] = useState<ITasks | undefined>();
 
   // Delete the task from context and server
-  const handleDelete = (_id: string | undefined) => {
-    deleteTasks(user, _id);
+  const handleDelete = (taskID: string | undefined) => {
+    deleteTasks(user, taskID);
     taskDispatch({
       type: "DELETE_TASK",
       // delete task with its id
-      payload: { _id: _id },
+      payload: { _id: taskID },
     });
   };
 
   const handleUpdate = (
-    _id: string | undefined,
+    taskID: string | undefined,
     completed: boolean | undefined
   ) => {
     // pass user, taskID and the opposite of the
-    updateTasks(user, _id, completed);
+    updateTasks(user, taskID, completed);
     // Call the update task dispatch and pass the taskID to the context reducer
     taskDispatch({
       type: "UPDATE_TASK",
-      payload: { _id: _id },
+      payload: { _id: taskID },
     });
   };
 
@@ -46,7 +46,7 @@ const DisplayTasks: React.FC = () => {
 
   return (
     <div>
-      {/* Check if taskName is undifined */}
+      {/* Check if taskName is undefined */}
       {taskState
         .filter((v) => v.taskName !== undefined)
         .map((todo: ITasks, index: number) => (

@@ -9,7 +9,7 @@ import {
 const defaultTaskState: Array<ITasks> = [
   {
     taskName: undefined,
-    _id: undefined,
+    taskID: undefined,
     completed: undefined,
   },
 ];
@@ -24,14 +24,14 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
         _id: string | undefined,
         completed: boolean | undefined
       ): ITasks => {
-        return { taskName: taskName, _id: _id, completed: completed };
+        return { taskName: taskName, taskID: _id, completed: completed };
       };
       // Add the tasks to the array
       return [
         ...state,
         newTodo(
           action.payload.taskName,
-          action.payload._id,
+          action.payload.taskID,
           action.payload.completed
         ),
       ];

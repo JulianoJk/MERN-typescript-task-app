@@ -20,29 +20,30 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
     setInput(e.target.value);
   };
 
+  let apiResponse: string | ITasks | undefined;
+
   const handleEdit = async (
     e: React.BaseSyntheticEvent
   ): Promise<null | undefined> => {
     e.preventDefault();
-    setModalOpen(false);
     if (
       input !== undefined &&
       input.trim() !== "" &&
       editedTodo?._id !== undefined
     ) {
       // pass user, taskID and the opposite of the
-      const data = await editTasks(user, editedTodo._id, input);
-      if (data === "changed successfully!") {
+      apiResponse = await editTasks(user, editedTodo._id, input);
+      if (typeof apiResponse === "string" || apiResponse instanceof String) {
+        return null;
+      } else {
+        setModalOpen(false);
         // Call the update task dispatch and pass the taskID to the context reducer
         editTaskDispatch({
           type: "EDIT_TASK",
           payload: { _id: editedTodo._id, taskName: input },
         });
-      } else {
-        return null;
       }
     }
-
     setInput("");
   };
   return (

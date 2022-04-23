@@ -69,11 +69,15 @@ router.put("/update", auth, async (req, res) => {
 router.put("/edit", auth, async (req, res) => {
   try {
     const { _id, editTodo } = req.body;
-    console.log();
-    if (!_id) return res.status(404).json({ message: "No Task id detected." });
 
-    await Task.findOneAndUpdate({ _id }, { taskName: editTodo });
-    res.status(201).json("changed successfully!");
+    if (!_id || !editTodo)
+      return res.status(404).json({ error: "No Task id detected." });
+
+    const editTask = await Task.findOneAndUpdate(
+      { _id },
+      { taskName: editTodo }
+    );
+    res.status(201).json(editTask);
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }

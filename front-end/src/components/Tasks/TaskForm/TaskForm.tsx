@@ -31,18 +31,17 @@ const TaskForm: React.FC = () => {
   ): Promise<void> => {
     e.preventDefault();
     if (input.trim() !== "") {
-      const data: string | ITasks | undefined = await submitTasks(user, input);
+      const data: ITasks | string | undefined = await submitTasks(user, input);
       if (typeof data === "string" || data instanceof String) {
         return;
       } else if (data) {
         let taskResponse: ITasks = {
           taskName: data["taskName"],
-          _id: data["_id"],
+          taskID: data["_id"],
           completed: data["completed"],
         };
         setTodoDispatch({ type: "ADD_TASK", payload: taskResponse });
       }
-
       setInput("");
     }
   };

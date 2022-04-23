@@ -6,25 +6,27 @@ export interface IUserInfoContext {
   token: string | undefined;
   id: string | undefined;
 }
-// Delete all locally saved tasks
-interface ResetAction {
-  type: "RESET_STATE";
-}
+
 //interface for the context's default state
 export interface StateInterface {
   user: IUserInfoContext;
   isLoggedIn: boolean;
 }
-interface setUserAction {
-  type: "SET_USER";
-  user: IUserInfoContext;
-}
-interface setLogInUserAction {
-  type: "SET_IS_LOGGED_IN";
-  isLoggedIn: boolean;
+// Reset everything
+interface ResetAction {
+  type: "RESET_STATE";
 }
 // Type for the action for the context
-export type TUserAction = setUserAction | setLogInUserAction | ResetAction;
+export type TUserAction =
+  | {
+      type: "SET_USER";
+      user: IUserInfoContext;
+    }
+  | {
+      type: "SET_IS_LOGGED_IN";
+      isLoggedIn: boolean;
+    }
+  | ResetAction;
 
 // Dispatch reducer for the task
 export type TodoAction =
@@ -32,7 +34,7 @@ export type TodoAction =
       type: "ADD_TASK";
       payload: {
         taskName: string | undefined;
-        _id: string | undefined;
+        taskID: string | undefined;
         completed: boolean | undefined;
       };
     }
@@ -41,6 +43,7 @@ export type TodoAction =
       payload: {
         completed?: boolean;
         _id: string | undefined;
+        taskID?: string 
         taskName?: string;
       };
     }
@@ -69,9 +72,11 @@ export interface IAuthCredentials {
   passwordRepeat?: string | undefined;
 }
 export interface ITasks {
-  error?: string
-  taskName: string | undefined ;
-  _id: string | undefined ;
+
+  error?: string;
+  _id?: string;
+  taskName: string | undefined;
+  taskID: string | undefined;
   completed: boolean | undefined;
 }
 
