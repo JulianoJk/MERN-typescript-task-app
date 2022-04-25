@@ -2,7 +2,7 @@ import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useTaskDispatch } from "../../../context/TaskContext";
 import { IUserInfoContext, usersDispatchContext } from "../../../Model/models";
-import { Button } from "../../button/Button.component";
+import { Button } from "../../Button/Button.component";
 import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
 import "../Auth.css";
@@ -100,8 +100,10 @@ const Login: React.FC = () => {
           <Button text={"Submit"} className={"btn-block"} />
         </div>
       </form>
-      <Link to="/register" className=" link flex-wrap link-dark">
-        Not a member?
+      <Link to="/register" className=" link flex-wrap text-primary">
+        <em>
+          <u> Not a member?</u>
+        </em>
       </Link>
       {/* Display error if there is any */}
       <div className={ErrorHandler(errorMessage)}>

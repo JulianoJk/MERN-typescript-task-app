@@ -3,7 +3,7 @@ import { submitTasks } from "../../../API/Api";
 import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
-import { Button } from "../../button/Button.component";
+import { Button } from "../../Button/Button.component";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 import style from "./TaskForm.module.css";
 
@@ -22,8 +22,6 @@ const TaskForm: React.FC = () => {
   const handleChange = (e: React.BaseSyntheticEvent): void => {
     setInput(e.target.value);
   };
-
-  // set the task's values to return tp server and save tasks
 
   // Handle submit then send tasks to server
   const handleFormSubmit = async (
@@ -53,7 +51,7 @@ const TaskForm: React.FC = () => {
       <form onSubmit={handleFormSubmit}>
         <input
           type="text"
-          className="form-control"
+          className={`form-control ${style.user_input}`}
           name="task"
           value={input}
           onChange={handleChange}

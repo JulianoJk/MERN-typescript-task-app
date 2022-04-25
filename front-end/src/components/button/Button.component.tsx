@@ -1,3 +1,4 @@
+import styles from "./Button.module.css";
 interface IButtonProps {
   text?: string;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
@@ -11,7 +12,7 @@ export const Button: React.FC<IButtonProps> = ({
 }) => {
   return (
     <button
-      className={`btn btn-success space flex-wrap  ${className}`}
+      className={`btn btn-success space flex-wrap  ${className} ${styles.btn_font}`}
       onClick={onClick}
     >
       {text}

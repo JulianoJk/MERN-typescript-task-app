@@ -5,11 +5,10 @@ import Register from "./components/Auth/Register/Register";
 import Profile from "./components/Pages/Profile/Profile";
 import { Route, BrowserRouter, Routes } from "react-router-dom";
 import Navigation from "./components/Header/Navigation/Navigation";
-import {
-  TasksContextProvider
-} from "./context/TaskContext";
+import { TasksContextProvider } from "./context/TaskContext";
 import "./App.css";
 import { UserContextProvider } from "./context/UserContext";
+import URLError from "./components/Pages/URLError/URLError";
 
 const App = () => {
   return (
@@ -24,6 +23,18 @@ const App = () => {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/profile" element={<Profile />} />
+              <Route
+                path="*"
+                element={
+                  <URLError
+                    bodyText="There is nothing here..."
+                    statusNumber={404}
+                    navText="Sorry, the page you are looking for could not be found."
+                    btnText="Go back!"
+                    navigationPath="/"
+                    />
+                }
+              />
             </Routes>
           </TasksContextProvider>
         </UserContextProvider>

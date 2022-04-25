@@ -1,6 +1,7 @@
 import React from "react";
 import { useUserState } from "../../../context/UserContext";
 import TaskForm from "../../Tasks/TaskForm/TaskForm";
+import URLError from "../URLError/URLError";
 
 const Home: React.FC = () => {
   const { isLoggedIn } = useUserState();
@@ -14,7 +15,12 @@ const Home: React.FC = () => {
   } else {
     return (
       <div>
-        <h1> No Account found! Log-In/Register to proceed!</h1>
+        <URLError
+          navText="No Account found!"
+          bodyText="To proceed, you must be logged-in!"
+          navigationPath="/login"
+          btnText="Login"
+        />
       </div>
     );
   }

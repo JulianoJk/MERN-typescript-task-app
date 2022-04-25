@@ -10,7 +10,7 @@ export interface IUserInfoContext {
 //interface for the context's default state
 export interface StateInterface {
   user: IUserInfoContext;
-  isLoggedIn: boolean;
+  isLoggedIn: boolean ;
 }
 // Reset everything
 interface ResetAction {

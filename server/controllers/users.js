@@ -4,14 +4,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/user.model");
 const auth = require("../middleware/auth");
 
-router.get("/profile", auth, async (req, res) => {
-  const token = req.headers["x-access-token"];
-  try {
-  } catch (ex) {
-    return res.status(400).send("Invalid token");
-  }
-});
-
 router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -96,10 +88,25 @@ router.post("/register", async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 });
+// Route for the user to delete account
+router.delete("/delete_account/:user_id", auth, async (req, res) => {
+  try {
+    // Get the user's id
+    const { user_id } = req.params;
+    User.findByIdAndDelete({ _id: user_id }, function (err) {
+      if (err) {
+        return handleError(err);
+      } else if (!id) {
+        return res.status(404).json({ message: "No Task id detected." });
+      } else {
+        return res.status(202).json("Deleted!");
+      }
+    });
+  } catch (e) {
+    return res.status(400).json({ error: e.message });
+  }
+});
 
-router.delete("/delete_account", auth, (res, req) => {});
 router.put("/change_email", auth, (res, req) => {});
 router.put("/change_password", auth, (res, req) => {});
-
-router.put("/change_email");
 module.exports = router;

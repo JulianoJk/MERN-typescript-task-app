@@ -153,7 +153,7 @@ export const updateTasks = async (
 export const editTasks = async (
   user: IUserInfoContext,
   taskID: string,
-  editTodo: string | undefined
+  editTodo: string
 ): Promise<ITasks | string | undefined> => {
   try {
     const response = await fetch(`http://localhost:3001/tasks/edit`, {

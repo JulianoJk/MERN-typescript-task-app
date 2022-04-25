@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { editTasks } from "../../../API/Api";
 import { useTaskDispatch } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
@@ -20,32 +20,27 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
     setInput(e.target.value);
   };
 
-  let apiResponse: string | ITasks | undefined;
-
-  const handleEdit = async (
-    e: React.BaseSyntheticEvent
-  ): Promise<null | undefined> => {
+  const fetchEdit = async (e: React.BaseSyntheticEvent) => {
+    console.log(editedTodo?._id);
     e.preventDefault();
-    if (
-      input !== undefined &&
-      input.trim() !== "" &&
-      editedTodo?._id !== undefined
-    ) {
+
+    if (editedTodo?._id !== undefined) {
       // pass user, taskID and the opposite of the
-      apiResponse = await editTasks(user, editedTodo._id, input);
-      if (typeof apiResponse === "string" || apiResponse instanceof String) {
-        return null;
-      } else {
-        setModalOpen(false);
-        // Call the update task dispatch and pass the taskID to the context reducer
+      const apiResponce = await editTasks(user, editedTodo?._id, input);
+      if (typeof apiResponce === "string" || apiResponce instanceof String) {
+        return;
+      } else if (apiResponce) {
         editTaskDispatch({
           type: "EDIT_TASK",
           payload: { _id: editedTodo._id, taskName: input },
         });
       }
     }
+
     setInput("");
+    setModalOpen(false);
   };
+
   return (
     <div
       className="modal fade"
@@ -58,7 +53,7 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
     >
       <div className="modal-dialog" role="document">
         <div className="modal-content">
-          <div className="modal-body">
+          <div className={`modal-body ${style.modal_background}`}>
             <button
               type="button"
               className="close"
@@ -67,17 +62,17 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
             >
               <span aria-hidden="true">&times;</span>
             </button>
-            <form onSubmit={handleEdit}>
+            <form onSubmit={fetchEdit}>
               <div className="form-group">
                 <label
                   htmlFor="message-text"
-                  className={`col-form-label ${style.task_title}`}
+                  className={`col-form-label ${style.text_font}`}
                 >
                   <strong>{editedTodo?.taskName}</strong>
                 </label>
                 <input
                   type="text"
-                  className="form-control"
+                  className={`form-control ${style.input_color} ${style.placeholder_font}`}
                   id="message-text"
                   name="task"
                   value={input}
@@ -97,7 +92,7 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
                 <button
                   type="button"
                   className="btn btn-success"
-                  onClick={handleEdit}
+                  onClick={fetchEdit}
                   data-dismiss="modal"
                 >
                   Save changes
@@ -112,3 +107,4 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
 };
 
 export default TaskModal;
+// BUG: Edits do not work every time, must log-out and login again or refresh page

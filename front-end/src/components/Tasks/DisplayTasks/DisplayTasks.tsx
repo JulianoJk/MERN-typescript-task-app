@@ -3,7 +3,7 @@ import { deleteTasks, updateTasks } from "../../../API/Api";
 import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
-import { Button } from "../../button/Button.component";
+import { Button } from "../../Button/Button.component";
 import TaskModal from "../TaskModal/TaskModal";
 import styles from "./DisplayTasks.module.css";
 
@@ -66,7 +66,7 @@ const DisplayTasks: React.FC = () => {
             {/* Edit task */}
             <button
               type="button"
-              className="btn btn-primary"
+              className={`btn btn-primary ${styles.btn}`}
               data-toggle="modal"
               data-target="#editTasks"
               onClick={() => {

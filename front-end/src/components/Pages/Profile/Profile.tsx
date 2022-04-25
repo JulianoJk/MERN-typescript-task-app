@@ -1,4 +1,5 @@
 import { useUserState } from "../../../context/UserContext";
+import URLError from "../URLError/URLError";
 
 const Profile: React.FC = () => {
   const { isLoggedIn, user } = useUserState();
@@ -7,12 +8,18 @@ const Profile: React.FC = () => {
     return (
       <div>
         <h1> Welcome Back {user.username}! </h1>
+        
       </div>
     );
   } else {
     return (
       <div>
-        <h1> No Account found! Log-In/Register to proceed!</h1>
+        <URLError
+          navText="No Account found!"
+          bodyText="To proceed, you must be logged-in!"
+          navigationPath="/login"
+          btnText="Login"
+        />
       </div>
     );
   }

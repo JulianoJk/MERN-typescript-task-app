@@ -6,7 +6,7 @@ import {
   IUserInfoContext,
   usersDispatchContext,
 } from "../../../Model/models";
-import { Button } from "../../button/Button.component";
+import { Button } from "../../Button/Button.component";
 import { registerAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
 import ErrorHandler from "../../ErrorHandler/ErrorHandler";
@@ -168,8 +168,10 @@ const Register: React.FC = () => {
       <div className={ErrorHandler(errorMessage)}>
         <strong>{errorMessage}!</strong>
       </div>
-      <Link to="/login" className=" link flex-wrap link-dark">
-        Already a member?
+      <Link to="/login" className=" link flex-wrap text-primary ">
+        <em>
+          <u> Already a member?</u>
+        </em>
       </Link>
     </div>
   );
