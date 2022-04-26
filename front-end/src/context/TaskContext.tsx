@@ -37,13 +37,13 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
       ];
     case "UPDATE_TASK":
       return state.map((todo) => {
-        if (todo._id === action.payload._id) {
+        if (todo.taskID === action.payload.taskID) {
           return { ...todo, completed: !todo.completed };
         }
         return todo;
       });
     case "DELETE_TASK":
-      return state.filter((todo) => todo._id !== action.payload._id);
+      return state.filter((todo) => todo.taskID !== action.payload.taskID);
     case "GET_TASK":
       console.log(state);
 
@@ -51,7 +51,7 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
     case "EDIT_TASK":
       // map all the tasks, when ids match, change the taskName with the new taskName
       return state.map((todo) => {
-        if (todo._id === action.payload._id) {
+        if (todo.taskID === action.payload.taskID) {
           return { ...todo, taskName: action.payload.taskName };
         }
         return todo;

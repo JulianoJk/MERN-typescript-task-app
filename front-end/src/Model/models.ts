@@ -42,7 +42,7 @@ export type TodoAction =
       type: "UPDATE_TASK" | "DELETE_TASK" | "EDIT_TASK";
       payload: {
         completed?: boolean;
-        _id: string | undefined;
+        _id?: string | undefined;
         taskID?: string 
         taskName?: string;
       };

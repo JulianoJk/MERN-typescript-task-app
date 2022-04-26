@@ -9,7 +9,11 @@ router.get("/get/:user_id", auth, async (req, res) => {
     const { user_id } = req.params;
     // find the task by the user+id extracted from the params
     const task = await Task.find({ user_id: user_id });
-    res.status(202).json(task);
+    if (task.length === 0) {
+      res.status(203).json("null");
+    } else {
+      res.status(202).json(task);
+    }
   } catch (err) {
     return res.status(401).json({ error: err.message });
   }
@@ -68,13 +72,13 @@ router.put("/update", auth, async (req, res) => {
 });
 router.put("/edit", auth, async (req, res) => {
   try {
-    const { _id, editTodo } = req.body;
+    const { taskID, editTodo } = req.body;
 
-    if (!_id || !editTodo)
+    if (!taskID || !editTodo)
       return res.status(404).json({ error: "No Task id detected." });
 
     const editTask = await Task.findOneAndUpdate(
-      { _id },
+      { taskID },
       { taskName: editTodo }
     );
     res.status(201).json(editTask);

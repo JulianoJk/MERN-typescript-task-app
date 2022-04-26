@@ -90,7 +90,7 @@ export const submitTasks = async (
 export const getTasks = async (
   user: IUserInfoContext,
   setTodoDispatch: taskDispatchContext
-): Promise<void> => {
+): Promise<ITasks[] | null | undefined> => {
   try {
     const response = await fetch(`http://localhost:3001/tasks/get/${user.id}`, {
       method: "GET",
@@ -100,8 +100,10 @@ export const getTasks = async (
       },
     });
     const data: ITasks[] = await response.json();
-    for (let i = 0; i < data.length; i++) {
-      setTodoDispatch({ type: "GET_TASK", payload: { ...data[i] } });
+    if (response.status === 203) {
+      return null;
+    } else {
+      return data;
     }
   } catch (error) {
     console.error(error);
@@ -163,7 +165,7 @@ export const editTasks = async (
         "x-access-token": `${user.token}`,
       },
       body: JSON.stringify({
-        _id: taskID,
+        taskID: taskID,
         editTodo: editTodo,
       }),
     });

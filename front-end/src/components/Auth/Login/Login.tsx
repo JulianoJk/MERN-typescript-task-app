@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import { useTaskDispatch } from "../../../context/TaskContext";
-import { IUserInfoContext, usersDispatchContext } from "../../../Model/models";
+import {
+  ITasks,
+  IUserInfoContext,
+  usersDispatchContext,
+} from "../../../Model/models";
 import { Button } from "../../Button/Button.component";
 import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
@@ -54,8 +58,24 @@ const Login: React.FC = () => {
         userDispatch({ type: "SET_IS_LOGGED_IN", isLoggedIn: true });
 
         //Get if any tasks from server
-        getTasks(user, setTodoDispatch);
-        navigate("/home");
+        const savedTasks: ITasks[] | null | undefined = await getTasks(
+          user,
+          setTodoDispatch
+        );
+        if (savedTasks !== null && savedTasks !== undefined) {
+          for (let i = 0; i < savedTasks.length; i++) {
+            let taskResponse: ITasks = {
+              taskName: savedTasks[i]["taskName"],
+              taskID: savedTasks[i]["_id"],
+              completed: savedTasks[i]["completed"],
+            };        
+            setTodoDispatch({ type: "GET_TASK", payload: taskResponse });
+          
+          }
+          navigate("/home");
+        } else {
+          navigate("/home");
+        }
       }
     } catch (error) {
       console.warn(error);

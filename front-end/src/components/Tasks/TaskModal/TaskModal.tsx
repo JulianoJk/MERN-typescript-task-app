@@ -21,18 +21,17 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
   };
 
   const fetchEdit = async (e: React.BaseSyntheticEvent) => {
-    console.log(editedTodo?._id);
     e.preventDefault();
 
-    if (editedTodo?._id !== undefined) {
+    if (editedTodo?.taskID !== undefined) {
       // pass user, taskID and the opposite of the
-      const apiResponce = await editTasks(user, editedTodo?._id, input);
+      const apiResponce = await editTasks(user, editedTodo?.taskID, input);
       if (typeof apiResponce === "string" || apiResponce instanceof String) {
         return;
       } else if (apiResponce) {
         editTaskDispatch({
           type: "EDIT_TASK",
-          payload: { _id: editedTodo._id, taskName: input },
+          payload: { taskID: editedTodo.taskID, taskName: input },
         });
       }
     }

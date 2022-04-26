@@ -22,7 +22,7 @@ const DisplayTasks: React.FC = () => {
     taskDispatch({
       type: "DELETE_TASK",
       // delete task with its id
-      payload: { _id: taskID },
+      payload: { taskID: taskID },
     });
   };
 
@@ -35,7 +35,7 @@ const DisplayTasks: React.FC = () => {
     // Call the update task dispatch and pass the taskID to the context reducer
     taskDispatch({
       type: "UPDATE_TASK",
-      payload: { _id: taskID },
+      payload: { taskID: taskID },
     });
   };
 
@@ -56,11 +56,11 @@ const DisplayTasks: React.FC = () => {
               type="checkbox"
               name="checkbox"
               defaultChecked={todo.completed}
-              id={todo._id}
+              id={todo.taskID}
               // Pass the opposite status of the task
-              onClick={() => handleUpdate(todo._id, !todo.completed)}
+              onClick={() => handleUpdate(todo.taskID, !todo.completed)}
             />
-            <label htmlFor={todo._id} className={checked(todo.completed)}>
+            <label htmlFor={todo.taskID} className={checked(todo.completed)}>
               {todo.taskName}
             </label>
             {/* Edit task */}
@@ -79,7 +79,7 @@ const DisplayTasks: React.FC = () => {
             {/* Delete a task */}
             <Button
               text={"Delete"}
-              onClick={() => handleDelete(todo._id)}
+              onClick={() => handleDelete(todo.taskID)}
               className={`btn btn-danger ${styles.btn}`}
             />
           </div>
