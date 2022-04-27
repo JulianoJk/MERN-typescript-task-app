@@ -35,7 +35,7 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
           action.payload.completed
         ),
       ];
-    case "UPDATE_TASK":
+    case "UPDATE_TASK":      
       return state.map((todo) => {
         if (todo.taskID === action.payload.taskID) {
           return { ...todo, completed: !todo.completed };
@@ -45,8 +45,6 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
     case "DELETE_TASK":
       return state.filter((todo) => todo.taskID !== action.payload.taskID);
     case "GET_TASK":
-      console.log(state);
-
       return [...state, action.payload];
     case "EDIT_TASK":
       // map all the tasks, when ids match, change the taskName with the new taskName

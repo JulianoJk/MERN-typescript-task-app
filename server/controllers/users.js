@@ -8,17 +8,17 @@ router.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
     if (!email || !password) {
-      return res.status(400).json({ message: "Mandatory fields are missing" });
+      return res.status(407).json({ message: "Mandatory fields are missing" });
     }
 
     const user = await User.findOne({ email: email });
     if (!user) {
-      return res.status(400).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
     const passwordsMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordsMatch) {
-      return res.status(400).json({ message: "Wrong password" });
+      return res.status(401).json({ message: "Wrong password" });
     }
 
     //Assign the token to the user
@@ -40,21 +40,21 @@ router.post("/register", async (req, res) => {
     let { email, password, passwordRepeat, username } = req.body;
     // Validations
     if (!email || !password || !passwordRepeat) {
-      return res.status(400).json({ message: "Mandatory fields are missing" });
+      return res.status(407).json({ message: "Mandatory fields are missing" });
     }
     if (password.length < 5) {
       return res
-        .status(400)
+        .status(407)
         .json({ message: "Password needs at least 5 characters" });
     }
     if (password !== passwordRepeat) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(403).json({ message: "Passwords do not match" });
     }
     // Check if email already exists
     const emailExists = await User.findOne({ email: email });
 
     if (emailExists) {
-      return res.status(400).json({ message: "Email already in use" });
+      return res.status(409).json({ message: "Email already in use" });
     }
 
     if (!username) {

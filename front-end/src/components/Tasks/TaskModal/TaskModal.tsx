@@ -106,4 +106,3 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
 };
 
 export default TaskModal;
-// BUG: Edits do not work every time, must log-out and login again or refresh page
