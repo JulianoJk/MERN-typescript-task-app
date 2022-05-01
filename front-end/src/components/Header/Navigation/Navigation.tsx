@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTaskDispatch } from "../../../context/TaskContext";
 import { useUserDispatch, useUserState } from "../../../context/UserContext";
-import { Button } from "../../Button/Button.component";
+import { Button } from "../../button/Button";
 import styles from "./Navigation.module.css";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";

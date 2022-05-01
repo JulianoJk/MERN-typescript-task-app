@@ -1,6 +1,6 @@
 import React from "react";
 import { NavigateFunction, useNavigate } from "react-router";
-import { Button } from "../../Button/Button.component";
+import { Button } from "../../button/Button";
 import styles from "./URLError.module.css";
 import stop_sign from "../../../images/stop_sign.png";
 

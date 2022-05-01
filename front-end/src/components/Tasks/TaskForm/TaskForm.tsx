@@ -3,7 +3,7 @@ import { submitTasks } from "../../../API/Api";
 import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
-import { Button } from "../../Button/Button.component";
+import { Button } from "../../button/Button";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 import style from "./TaskForm.module.css";
 

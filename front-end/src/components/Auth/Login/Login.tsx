@@ -6,7 +6,7 @@ import {
   IUserInfoContext,
   usersDispatchContext,
 } from "../../../Model/models";
-import { Button } from "../../Button/Button.component";
+import { Button } from "../../button/Button";
 import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
 import "../Auth.css";

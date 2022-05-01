@@ -84,6 +84,7 @@ router.post("/register", async (req, res) => {
       username: userSignup.username,
       id: userSignup._id,
     });
+    console.log("done!");
   } catch (err) {
     return res.status(500).json({ error: err.message });
   }

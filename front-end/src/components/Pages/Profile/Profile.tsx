@@ -4,11 +4,11 @@ import URLError from "../URLError/URLError";
 const Profile: React.FC = () => {
   const { isLoggedIn, user } = useUserState();
 
+  const isLoggedInLocal = localStorage.getItem("isLoggedIn");
   if (isLoggedIn) {
     return (
       <div>
         <h1> Welcome Back {user.username}! </h1>
-        
       </div>
     );
   } else {

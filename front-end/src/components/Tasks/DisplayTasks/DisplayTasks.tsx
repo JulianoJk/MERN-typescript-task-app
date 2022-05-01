@@ -3,7 +3,7 @@ import { deleteTasks, updateTasks } from "../../../API/Api";
 import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
-import { Button } from "../../Button/Button.component";
+import { Button } from "../../button/Button";
 import TaskModal from "../TaskModal/TaskModal";
 import styles from "./DisplayTasks.module.css";
 
