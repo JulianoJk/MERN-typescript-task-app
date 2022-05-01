@@ -14,6 +14,12 @@ $ cd ../client
 $ npm install
 $ npm start
 ```
+OR
+```
+$ cd ../client
+$ yarn install
+yarn start
+```
 
 ### Back-End(server)
 
