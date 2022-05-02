@@ -1,34 +1,6 @@
 .nav_bg {
-  background-color: #cc000089;
+  background-color: #FA5252;
   padding: 7px;
   color: #fcf7f8;
-}
-.errorMessage {
-  font-family: cursive, "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
-    "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
-  color: #333333;
-}
-
-.border {
-  width: fit-content;
-  height: auto;
-  border-width: 2px;
-  border-radius: 20px;
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
-  background-color: rgba(94, 109, 119, 0.21);
-  padding: 10px;
-  margin-top: 10px;
-}
-
-.position {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.btn-info {
-  color: #fff;
-  background-color: #5bc0de;
-  border-color: #46b8da;
-
+  border-radius: 10px;
 }

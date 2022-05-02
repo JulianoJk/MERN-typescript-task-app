@@ -2,18 +2,23 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTaskDispatch } from "../../../context/TaskContext";
 import { useUserDispatch, useUserState } from "../../../context/UserContext";
-import { Button } from "../../button/Button";
 import styles from "./Navigation.module.css";
 import { useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Logout, Home, User, Login, Pencil } from "tabler-icons-react";
+import { Button, Group, Header, Navbar, Burger, AppShell } from "@mantine/core";
 
 const Navigation: React.FC = () => {
+  // state for the burger menu
+  const [opened, setOpened] = useState(false);
+
   const userDispatch = useUserDispatch();
   const { isLoggedIn } = useUserState();
   const navigate = useNavigate();
 
   const todoDispatch = useTaskDispatch();
 
+  // Track the location URL the user has selected
   const location = useLocation();
 
   // After logout, clear the context for the user and tasks, then navigate to index
@@ -23,7 +28,7 @@ const Navigation: React.FC = () => {
     navigate("/");
   };
   // state for the className of nav. If user navigates to a path which doesn't exist, hide nav bar to display NoURL component
-  const [checkURL, setCheckURL] = useState(`navbar-nav mr-auto  ${styles.bg}`);
+  const [checkURL, setCheckURL] = useState(`${styles.bg}`);
 
   // Check if url is in the array and render every time location is changed
   useEffect(() => {
@@ -44,7 +49,7 @@ const Navigation: React.FC = () => {
       ) {
         setCheckURL(`${styles.noURL}`);
       } else {
-        setCheckURL(`navbar-nav mr-auto  ${styles.bg}`);
+        setCheckURL(`${styles.bg}`);
       }
     } else {
       setCheckURL(`${styles.noURL}`);
@@ -54,62 +59,87 @@ const Navigation: React.FC = () => {
   // Check if is user is logged or not
   if (isLoggedIn) {
     return (
-      <header>
-        <nav className={`${checkURL}`}>
-          <div className="d-flex flex-row-reverse bd-highlight space ms-auto">
-            {/* create a responsive btn group */}
-            <Button
-              text={"Log-Out"}
-              onClick={logOut}
-              className={`${styles.btn}`}
-            />
+      <AppShell>
+        <Navbar width={{ base: 300 }} height={500} p="xs">
+          <Burger
+            opened={opened}
+            onClick={() => setOpened((o) => !o)}
+            title={"This title"}
+          >
+            <Group position="right" mt="md">
+              <Button
+                component={Link}
+                to="/home"
+                m={3}
+                leftIcon={<Home size={16} />}
+              >
+                Home
+              </Button>
 
-            <Link
-              to="/home"
-              className={`btn btn-outline-primary text-light text-opacity-75 ${styles.btn}`}
-            >
-              Home
-            </Link>
+              <Button
+                component={Link}
+                to="/profile"
+                m={3}
+                leftIcon={<User size={16} />}
+              >
+                Profile
+              </Button>
 
-            <Link
-              to="/profile"
-              className={`btn btn-outline-primary text-white text-opacity-75 ${styles.btn}`}
-            >
-              Profile
-            </Link>
-          </div>
-        </nav>
-      </header>
+              <Button
+                leftIcon={<Logout size={16} />}
+                onClick={logOut}
+                m={3}
+                variant="outline"
+                color="pink"
+              >
+                logOut
+              </Button>
+            </Group>
+          </Burger>
+        </Navbar>
+      </AppShell>
     );
   } else {
     return (
-      <header>
-        <nav className={checkURL}>
-          <div className="d-flex flex-row-reverse bd-highlight space ms-auto ">
-            {/* create a responsive btn group */}
-            <Link
-              to="/register"
-              className={`btn text-white ${styles.login_btn} ${styles.btn} `}
-            >
-              Register
-            </Link>
+      <Header
+        height={70}
+        p="md"
+        classNames={{
+          root: `${styles.bg}`,
+        }}
+      >
+        <Group position="right">
+          <Button component={Link} to="/" radius="md" size="md" uppercase>
+            Index
+          </Button>
 
-            <Link
-              to="/login"
-              className={`btn btn-outline-success text-white ${styles.btn} `}
-            >
-              Login
-            </Link>
-
-            <Link
-              to="/"
-              className={`btn btn-outline-success text-white text-opacity-75 ${styles.btn}`}
-            >
-              Index
-            </Link>
-          </div>
-        </nav>
-      </header>
+          <Button
+            leftIcon={<Login size={16} />}
+            radius="md"
+            size="md"
+            uppercase
+            color="green"
+            variant="outline"
+            m={1}
+            component={Link}
+            to="/login"
+          >
+            Log-In
+          </Button>
+          <Button
+            leftIcon={<Pencil size={16} />}
+            radius="md"
+            size="md"
+            uppercase
+            component={Link}
+            to="/register"
+            color="green"
+            m={1}
+          >
+            Register
+          </Button>
+        </Group>
+      </Header>
     );
   }
 };

@@ -27,8 +27,16 @@ yarn start
 $ cd ../server
 $ npm i mongoose
 $ npm install update
-$ node server.js
+$ npm run dev
 
+```
+
+OR
+
+```
+$ cd ../server
+$ yarn add mongoose
+$ yarn run dev
 ```
 
 Additionally, in order to run the server, you need to create a .env file in the cmd/powershell or terminal

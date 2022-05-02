@@ -15,8 +15,7 @@ const Profile: React.FC = () => {
     return (
       <div>
         <URLError
-          navText="No Account found!"
-          bodyText="To proceed, you must be logged-in!"
+          navText="No Account found. To proceed, you must be logged-in!"
           navigationPath="/login"
           btnText="Login"
         />

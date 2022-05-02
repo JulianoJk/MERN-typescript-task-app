@@ -1,9 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { NavigateFunction, useNavigate } from "react-router";
-import { Button } from "../../button/Button";
 import styles from "./URLError.module.css";
 import stop_sign from "../../../images/stop_sign.png";
-
+import {
+  Button,
+  Group,
+  Image,
+  Modal,
+  Text,
+  Title,
+  useMantineTheme,
+} from "@mantine/core";
 interface IPops {
   bodyText?: string;
   navText?: string;
@@ -19,45 +26,45 @@ const URLError: React.FC<IPops> = ({
   navigationPath,
 }) => {
   const navigate: NavigateFunction = useNavigate();
+  const theme = useMantineTheme();
+  const [opened, setOpened] = useState(true);
 
   return (
     <div>
-      <header>
-        <nav
-          className={`navbar navbar-nav  ${styles.nav_bg} ${styles.errorMessage}`}
-        >
-          <div className="d-flex flex-row-reverse bd-highlight space ms-auto">
-            <h1>{navText}</h1>
-          </div>
-        </nav>
-      </header>
-      <div className={`${styles.position}`}>
-        <div className={` ${styles.border}`}>
-          <div className="text-center">
-            <img
-              src={stop_sign}
-              alt={"stop_sign"}
-              className="rounded mx-auto d-block"
-            />
-          </div>
-          <span
-            className={`display-1 ${styles.errorMessage} ${styles.position}`}
-          >
-            <strong>{statusNumber}</strong>
-          </span>
-          <h2
-            className={` display-4  ${styles.errorMessage} ${styles.position}`}
-          >
-            <em>{text}</em>
-          </h2>
-          {/* Clicking the button, will navigate user to index */}
+      <Modal
+        overlayColor={
+          theme.colorScheme === "dark"
+            ? theme.colors.dark[9]
+            : theme.colors.gray[2]
+        }
+        overlayOpacity={0.55}
+        overlayBlur={3}
+        opened={opened}
+        withCloseButton={false}
+        onClose={() => setOpened(true)}
+        title={
+          <Title order={1} className={`${styles.nav_bg}`}>
+            {navText}
+          </Title>
+        }
+        size="xl"
+        radius={30}
+      >
+        <Image radius="md" src={stop_sign} alt="stop_sign" />
+        <Text align="center">{text}</Text>
+        <Group position="center">
           <Button
-            className={` col-md-12 text-center btn-info`}
-            text={btnText}
+            variant="gradient"
+            gradient={{ from: "teal", to: "lime", deg: 105 }}
+            radius="md"
+            size="lg"
+            fullWidth
             onClick={() => navigate(`${navigationPath}`)}
-          />
-        </div>
-      </div>
+          >
+            {btnText}
+          </Button>
+        </Group>
+      </Modal>
     </div>
   );
 };

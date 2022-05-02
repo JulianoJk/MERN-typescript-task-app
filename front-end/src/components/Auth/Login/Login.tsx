@@ -6,20 +6,28 @@ import {
   IUserInfoContext,
   usersDispatchContext,
 } from "../../../Model/models";
-import { Button } from "../../button/Button";
 import { getTasks, loginAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
 import "../Auth.css";
 import ErrorHandler from "../../ErrorHandler/ErrorHandler";
 import { Link } from "react-router-dom";
 import { useUserDispatch } from "../../../context/UserContext";
+import {
+  PasswordInput,
+  Group,
+  Button,
+  Box,
+  TextInput,
+  Center,
+  Image,
+  Anchor,
+} from "@mantine/core";
+import { AlertComponent } from "../../AlertComponent/AlertComponent";
 
 const Login: React.FC = () => {
   const navigate: NavigateFunction = useNavigate();
 
-  const [errorMessage, setErrorMessage] = useState<
-    string | IUserInfoContext | null | undefined
-  >();
+  const [errorMessage, setErrorMessage] = useState<any>();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -68,9 +76,8 @@ const Login: React.FC = () => {
               taskName: savedTasks[i]["taskName"],
               taskID: savedTasks[i]["_id"],
               completed: savedTasks[i]["completed"],
-            };        
+            };
             setTodoDispatch({ type: "GET_TASK", payload: taskResponse });
-          
           }
           navigate("/home");
         } else {
@@ -83,53 +90,50 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="container flex-column input-container border ">
-      <div>
-        <img src={Logo} alt="Logo" className="rounded mx-auto d-block " />
-      </div>
+    <Box sx={{ maxWidth: 540 }} mx="auto" className="border">
+      <Center>
+        <Image radius="md" src={Logo} alt="Logo" />
+      </Center>
       <h1 className="title">Log-In</h1>
-      <form onSubmit={handleInputs}>
-        <label htmlFor="email" className="control-label text">
-          <strong>Email:</strong>
-        </label>
-        <input
-          type="email"
-          className="form-control email-icon"
-          value={email}
-          id="email"
+      <form
+        // values: current form values
+        onSubmit={handleInputs}
+      >
+        <TextInput
+          required
+          label="Email"
           placeholder="name@example.com"
+          value={email}
           onChange={onEmailChange}
           autoComplete="on"
         />
 
-        <br />
-        <label htmlFor="password" className="control-label text">
-          <strong>Password:</strong>
-        </label>
-        <input
-          type="password"
-          value={password}
-          className="form-control password-icon"
-          id="password"
-          onChange={onPasswordChange}
+        <PasswordInput
+          required
+          label="Password"
           placeholder="Password"
+          value={password}
+          onChange={onPasswordChange}
           autoComplete="on"
         />
-        <br />
-        <div className="d-grid gap-2 ">
-          <Button text={"Submit"} className={"btn-block"} />
-        </div>
+        <Group position="right" mt="md">
+          <Button color="green" type="submit">
+            Submit
+          </Button>
+        </Group>
+
+        {/*Display error message if any*/}
+        <AlertComponent
+          className={ErrorHandler(errorMessage)}
+          message={errorMessage}
+        />
       </form>
-      <Link to="/register" className=" link flex-wrap text-primary">
+      <Anchor component={Link} to="/register">
         <em>
           <u> Not a member?</u>
         </em>
-      </Link>
-      {/* Display error if there is any */}
-      <div className={ErrorHandler(errorMessage)}>
-        <strong>{errorMessage}!</strong>
-      </div>
-    </div>
+      </Anchor>
+    </Box>
   );
 };
 export default Login;

@@ -6,10 +6,20 @@ import {
   IUserInfoContext,
   usersDispatchContext,
 } from "../../../Model/models";
-import { Button } from "../../button/Button";
 import { registerAPI } from "../../../API/Api";
 import Logo from "../../../images/logo.png";
 import ErrorHandler from "../../ErrorHandler/ErrorHandler";
+import {
+  PasswordInput,
+  Group,
+  Button,
+  Box,
+  TextInput,
+  Center,
+  Image,
+  Anchor,
+} from "@mantine/core";
+import { AlertComponent } from "../../AlertComponent/AlertComponent";
 
 import "../Auth.css";
 import { useUserDispatch } from "../../../context/UserContext";
@@ -42,9 +52,7 @@ const Register: React.FC = () => {
   const navigate = useNavigate();
   const [internalState, formDispatch] = useReducer(reducer, initState);
   const userDispatch: usersDispatchContext = useUserDispatch();
-  const [errorMessage, setErrorMessage] = useState<
-    string | IUserInfoContext | null | undefined
-  >();
+  const [errorMessage, setErrorMessage] = useState<any>();
 
   // Email handler
   const onEmailChange = (e: React.BaseSyntheticEvent): void => {
@@ -95,85 +103,66 @@ const Register: React.FC = () => {
     }
   };
   return (
-    <div className="container flex-column input-container border border_style">
-      <div>
-        <img src={Logo} alt="Logo" className="rounded mx-auto d-block " />
-      </div>
-
-      <h1 className="title">Register</h1>
-      <form onSubmit={handleInputs}>
-        <label htmlFor="email" className="control-label text">
-          <strong>Email:</strong>
-        </label>
-        <input
-          type="email"
-          value={initState.email}
-          className="form-control email-icon"
-          id="email"
+    <Box sx={{ maxWidth: 540 }} mx="auto" className="border">
+      <Center>
+        <Image radius="md" src={Logo} alt="Logo" />
+      </Center>
+      <h1 className="title">Log-In</h1>
+      <form
+        // values: current form values
+        onSubmit={handleInputs}
+      >
+        <TextInput
+          required
+          label="Email"
           placeholder="name@example.com"
+          value={initState.email}
           onChange={onEmailChange}
-          required={true}
-          minLength={5}
           autoComplete="on"
         />
-        <br />
-        <label htmlFor="Username" className="control-label text">
-          <strong>Username: (optional)</strong>
-        </label>
-        <input
-          type="text"
-          value={initState.username}
-          className="form-control user-icon"
-          id="Username"
+
+        <TextInput
+          label="Username"
           placeholder="John Smith"
+          value={initState.username}
           onChange={onNameChange}
           autoComplete="on"
         />
-        <br />
-        <label htmlFor="password" className="control-label text">
-          <strong>Password:</strong>
-        </label>
-        <input
-          type="password"
+
+        <PasswordInput
+          required
+          label="Password"
           value={initState.password}
-          className="form-control password-icon"
-          id="password"
           placeholder="Password"
           onChange={handlePassword}
-          required={true}
-          minLength={6}
           autoComplete="on"
         />
-        <br />
-        <label htmlFor="confirmPassword" className="control-label text">
-          <strong>Confirm Password:</strong>
-        </label>
-        <input
-          type="password"
+
+        <PasswordInput
+          required
+          label="Confirm Password"
+          placeholder=" Confirm Password"
           value={initState.passwordRepeat}
-          className="form-control password-icon"
-          id="confirmPassword"
-          placeholder="Confirm Password"
           onChange={handleConfirmPassword}
-          required={true}
-          minLength={6}
           autoComplete="on"
         />
-        <br />
-        <div className="d-grid gap-2">
-          <Button text={"Submit"} className={"btn-block"} />
-        </div>
+        <Group position="right" mt="md">
+          <Button color="green" type="submit">
+            Submit
+          </Button>
+        </Group>
       </form>
-      {/* Display error if there is any */}
-      <div className={ErrorHandler(errorMessage)}>
-        <strong>{errorMessage}!</strong>
-      </div>
-      <Link to="/login" className=" link flex-wrap text-primary ">
+      {/*Display error message if any*/}
+      <AlertComponent
+        className={ErrorHandler(errorMessage)}
+        message={errorMessage}
+      />
+      <Anchor component={Link} to="/register">
         <em>
-          <u> Already a member?</u>
+          <u> Not a member?</u>
         </em>
-      </Link>
-    </div>
+      </Anchor>
+    </Box>
   );
 };
 export default Register;
