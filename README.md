@@ -1,7 +1,7 @@
 # General info
 
 MERN stack simple todo list
-College M.E.R.N. task management application.
+College M.E.R.N. task management application, with Mantine UI
 
 This project aims to demonstrate the JWT authentication and authorization
 
