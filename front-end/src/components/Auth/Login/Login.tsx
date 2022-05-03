@@ -63,7 +63,6 @@ const Login: React.FC = () => {
           token: data["token"],
         };
         userDispatch({ type: "SET_USER", user: user });
-        userDispatch({ type: "SET_IS_LOGGED_IN", isLoggedIn: true });
 
         //Get if any tasks from server
         const savedTasks: ITasks[] | null | undefined = await getTasks(
@@ -77,7 +76,10 @@ const Login: React.FC = () => {
               taskID: savedTasks[i]["_id"],
               completed: savedTasks[i]["completed"],
             };
-            setTodoDispatch({ type: "GET_TASK", payload: taskResponse });
+            setTodoDispatch({
+              type: "SET_TASKS_FROM_SERVER",
+              payload: taskResponse,
+            });
           }
           navigate("/home");
         } else {

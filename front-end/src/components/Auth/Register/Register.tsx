@@ -95,7 +95,6 @@ const Register: React.FC = () => {
           token: data["token"],
         };
         userDispatch({ type: "SET_USER", user: user });
-        userDispatch({ type: "SET_IS_LOGGED_IN", isLoggedIn: true });
         navigate("/home");
       }
     } catch (error) {

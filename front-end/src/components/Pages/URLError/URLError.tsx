@@ -18,9 +18,10 @@ interface IPops {
   btnText?: string;
   navigationPath?: string;
 }
+
+// In case the user tries to navigate to a non-existing URL or navigates to "Home"/"Profile" without being logged, display error modal
 const URLError: React.FC<IPops> = ({
   bodyText: text,
-  statusNumber,
   navText,
   btnText,
   navigationPath,

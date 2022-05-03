@@ -18,7 +18,7 @@ const defaultTaskState: Array<ITasks> = [
 const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
   switch (action.type) {
     case "ADD_TASK":
-      // save new tasks
+      // save new task
       const newTodo = (
         taskName: string | undefined,
         _id: string | undefined,
@@ -26,6 +26,7 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
       ): ITasks => {
         return { taskName: taskName, taskID: _id, completed: completed };
       };
+
       // Add the tasks to the array
       return [
         ...state,
@@ -35,16 +36,17 @@ const taskReducer = (state: Array<ITasks>, action: TodoAction) => {
           action.payload.completed
         ),
       ];
-    case "UPDATE_TASK":      
+    case "UPDATE_TASK":
       return state.map((todo) => {
         if (todo.taskID === action.payload.taskID) {
           return { ...todo, completed: !todo.completed };
         }
+
         return todo;
       });
     case "DELETE_TASK":
       return state.filter((todo) => todo.taskID !== action.payload.taskID);
-    case "GET_TASK":
+    case "SET_TASKS_FROM_SERVER":
       return [...state, action.payload];
     case "EDIT_TASK":
       // map all the tasks, when ids match, change the taskName with the new taskName

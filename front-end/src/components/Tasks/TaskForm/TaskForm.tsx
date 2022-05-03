@@ -1,9 +1,10 @@
+import { Button, Container, Input } from "@mantine/core";
 import { useState } from "react";
+import { CirclePlus } from "tabler-icons-react";
 import { submitTasks } from "../../../API/Api";
 import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
-import { Button } from "../../button/Button";
 import DisplayTasks from "../DisplayTasks/DisplayTasks";
 import style from "./TaskForm.module.css";
 
@@ -45,13 +46,12 @@ const TaskForm: React.FC = () => {
   };
 
   return (
-    <div
-      className={`container flex-column input-container border ${style.border_style}`}
-    >
+    <Container size={"md"} className={` ${style.border}`}>
       <form onSubmit={handleFormSubmit}>
-        <input
-          type="text"
-          className={`form-control ${style.user_input}`}
+        <Input
+          variant="filled"
+          radius="md"
+          size="lg"
           name="task"
           value={input}
           onChange={handleChange}
@@ -59,12 +59,17 @@ const TaskForm: React.FC = () => {
           autoComplete="on"
         />
 
-        <div className="d-grid gap-2">
-          <Button text={"Add task"} className={"btn-block"} />
-        </div>
+        <Button
+          color="green"
+          radius="md"
+          size="md"
+          rightIcon={<CirclePlus size={25} />}
+        >
+          Add task
+        </Button>
       </form>
       <DisplayTasks />
-    </div>
+    </Container>
   );
 };
 

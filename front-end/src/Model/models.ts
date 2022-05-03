@@ -10,7 +10,6 @@ export interface IUserInfoContext {
 //interface for the context's default state
 export interface StateInterface {
   user: IUserInfoContext;
-  isLoggedIn: boolean ;
 }
 // Reset everything
 interface ResetAction {
@@ -21,10 +20,6 @@ export type TUserAction =
   | {
       type: "SET_USER";
       user: IUserInfoContext;
-    }
-  | {
-      type: "SET_IS_LOGGED_IN";
-      isLoggedIn: boolean;
     }
   | ResetAction;
 
@@ -43,13 +38,13 @@ export type TodoAction =
       payload: {
         completed?: boolean;
         _id?: string | undefined;
-        taskID?: string 
+        taskID?: string;
         taskName?: string;
       };
     }
   | ResetAction
   | {
-      type: "GET_TASK";
+      type: "SET_TASKS_FROM_SERVER";
       payload: ITasks;
     };
 // Type for the dispatch reducer user
@@ -72,7 +67,6 @@ export interface IAuthCredentials {
   passwordRepeat?: string | undefined;
 }
 export interface ITasks {
-
   error?: string;
   _id?: string;
   taskName: string | undefined;

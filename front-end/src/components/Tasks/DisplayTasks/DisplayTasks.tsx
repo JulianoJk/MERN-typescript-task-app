@@ -1,9 +1,17 @@
+import {
+  Box,
+  Button,
+  Center,
+  Checkbox,
+  Container,
+  Group,
+  Text,
+} from "@mantine/core";
 import { useState } from "react";
 import { deleteTasks, updateTasks } from "../../../API/Api";
 import { useTaskDispatch, useTaskState } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
 import { ITasks } from "../../../Model/models";
-import { Button } from "../../button/Button";
 import TaskModal from "../TaskModal/TaskModal";
 import styles from "./DisplayTasks.module.css";
 
@@ -40,55 +48,63 @@ const DisplayTasks: React.FC = () => {
   };
 
   // Return classes based on whether item is checked
-  const checked = (taskCompleted: boolean | undefined) => {
+  const strikeWhenCompleted = (taskCompleted: boolean | undefined) => {
     return taskCompleted ? `${styles.checked_task}` : `${styles.default_task}`;
   };
-
   return (
-    <div>
+    <Box mx="auto">
       {/* Check if taskName is undefined */}
       {taskState
         .filter((v) => v.taskName !== undefined)
         .map((todo: ITasks, index: number) => (
           <div key={index} className={`${styles.task_container} `}>
             {/* Change complete status of a task. If task is completed, keep checked on */}
-            <input
-              type="checkbox"
+            <Checkbox
               name="checkbox"
+              label={
+                <Text
+                  size="md"
+                  color={"white"}
+                  weight={500}
+                  className={strikeWhenCompleted(todo.completed)}
+                >
+                  {todo.taskName}
+                </Text>
+              }
               defaultChecked={todo.completed}
               id={todo.taskID}
+              className={strikeWhenCompleted(todo.completed)}
               // Pass the opposite status of the task
               onClick={() => handleUpdate(todo.taskID, !todo.completed)}
             />
-            <label htmlFor={todo.taskID} className={checked(todo.completed)}>
-              {todo.taskName}
-            </label>
-            {/* Edit task */}
-            <button
-              type="button"
-              className={`btn btn-primary ${styles.btn}`}
-              data-toggle="modal"
-              data-target="#editTasks"
-              onClick={() => {
-                setModalOpen(true);
-                setEditedTodo(todo);
-              }}
-            >
-              Edit
-            </button>
-            {/* Delete a task */}
-            <Button
-              text={"Delete"}
-              onClick={() => handleDelete(todo.taskID)}
-              className={`btn btn-danger ${styles.btn}`}
-            />
+
+            <Center inline>
+              {/* Edit task */}
+              <Button
+                onClick={() => {
+                  setModalOpen(true);
+                  setEditedTodo(todo);
+                }}
+              >
+                Edit
+              </Button>
+              {/* Delete a task */}
+              <Button
+                m={"xs"}
+                color="red"
+                onClick={() => handleDelete(todo.taskID)}
+                className={`${styles.btn}`}
+              >
+                Delete
+              </Button>
+            </Center>
           </div>
         ))
         .reverse()}
       {modalOpen && (
-        <TaskModal editedTodo={editedTodo} setModalOpen={setModalOpen} />
+        <TaskModal editedTodo={editedTodo} setModalOpen={setModalOpen} modalOpen={modalOpen}/>
       )}
-    </div>
+    </Box>
   );
 };
 

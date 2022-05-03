@@ -2,10 +2,10 @@ import { useUserState } from "../../../context/UserContext";
 import URLError from "../URLError/URLError";
 
 const Profile: React.FC = () => {
-  const { isLoggedIn, user } = useUserState();
+  const { user } = useUserState();
+  let userIsLoggedInLocal = localStorage.getItem("user");
 
-  const isLoggedInLocal = localStorage.getItem("isLoggedIn");
-  if (isLoggedIn) {
+  if (userIsLoggedInLocal) {
     return (
       <div>
         <h1> Welcome Back {user.username}! </h1>

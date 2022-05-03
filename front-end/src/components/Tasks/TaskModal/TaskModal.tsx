@@ -1,4 +1,10 @@
-import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Input,
+  Modal,
+  useMantineTheme,
+} from "@mantine/core";
+import React, { useState } from "react";
 import { editTasks } from "../../../API/Api";
 import { useTaskDispatch } from "../../../context/TaskContext";
 import { useUserState } from "../../../context/UserContext";
@@ -7,12 +13,19 @@ import style from "./TaskModal.module.css";
 
 interface Props {
   editedTodo: ITasks | undefined;
+  modalOpen: boolean;
   setModalOpen: (val: React.SetStateAction<boolean>) => void;
 }
-const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
+const TaskModal: React.FC<Props> = ({
+  editedTodo,
+  setModalOpen,
+  modalOpen,
+}) => {
   const { user } = useUserState();
 
   const [input, setInput] = useState<string>("");
+
+  const theme = useMantineTheme();
 
   const editTaskDispatch = useTaskDispatch();
 
@@ -23,12 +36,12 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
   const fetchEdit = async (e: React.BaseSyntheticEvent) => {
     e.preventDefault();
 
-    if (editedTodo?.taskID !== undefined) {
+    if (editedTodo?.taskID !== undefined && input.trim() !== "") {
       // pass user, taskID and the opposite of the
-      const apiResponce = await editTasks(user, editedTodo?.taskID, input);
-      if (typeof apiResponce === "string" || apiResponce instanceof String) {
+      const apiResponse = await editTasks(user, editedTodo?.taskID, input);
+      if (typeof apiResponse === "string" || apiResponse instanceof String) {
         return;
-      } else if (apiResponce) {
+      } else if (apiResponse) {
         editTaskDispatch({
           type: "EDIT_TASK",
           payload: { taskID: editedTodo.taskID, taskName: input },
@@ -41,67 +54,38 @@ const TaskModal: React.FC<Props> = ({ editedTodo, setModalOpen }) => {
   };
 
   return (
-    <div
-      className="modal fade"
-      id="editTasks"
-      tabIndex={-1}
-      role="dialog"
-      aria-labelledby="editTasksLabel"
-      aria-hidden="true"
-      data-backdrop="false"
+    <Modal
+      opened={modalOpen}
+      withCloseButton={true}
+      overlayColor={
+        theme.colorScheme === "dark"
+          ? theme.colors.dark[9]
+          : theme.colors.gray[2]
+      }
+      overlayOpacity={0.55}
+      overlayBlur={3}
+      onClose={() => setModalOpen(false)}
     >
-      <div className="modal-dialog" role="document">
-        <div className="modal-content">
-          <div className={`modal-body ${style.modal_background}`}>
-            <button
-              type="button"
-              className="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-            <form onSubmit={fetchEdit}>
-              <div className="form-group">
-                <label
-                  htmlFor="message-text"
-                  className={`col-form-label ${style.text_font}`}
-                >
-                  <strong>{editedTodo?.taskName}</strong>
-                </label>
-                <input
-                  type="text"
-                  className={`form-control ${style.input_color} ${style.placeholder_font}`}
-                  id="message-text"
-                  name="task"
-                  value={input}
-                  onChange={handleChange}
-                  placeholder="Type new todo name"
-                  autoComplete="on"
-                />
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-danger"
-                  data-dismiss="modal"
-                >
-                  Close
-                </button>
-                <button
-                  type="button"
-                  className="btn btn-success"
-                  onClick={fetchEdit}
-                  data-dismiss="modal"
-                >
-                  Save changes
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+      <div className={` ${style.modal_background}`}>
+        <form onSubmit={fetchEdit}>
+          <Input
+            type="text"
+            name="editTask"
+            value={input}
+            placeholder={editedTodo?.taskName}
+            onChange={handleChange}
+            autoComplete="on"
+          />
+
+          <Button color={"red"} onClick={() => setModalOpen(false)}>
+            Close
+          </Button>
+          <Button color={"lime"} onClick={fetchEdit}>
+            Save changes
+          </Button>
+        </form>
       </div>
-    </div>
+    </Modal>
   );
 };
 

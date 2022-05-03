@@ -1,12 +1,11 @@
 import React from "react";
-import { useUserState } from "../../../context/UserContext";
 import TaskForm from "../../Tasks/TaskForm/TaskForm";
 import URLError from "../URLError/URLError";
 
 const Home: React.FC = () => {
-  const { isLoggedIn } = useUserState();
+  let userIsLoggedInLocal = localStorage.getItem("user");
 
-  if (isLoggedIn) {
+  if (userIsLoggedInLocal) {
     return (
       <div>
         <TaskForm />
